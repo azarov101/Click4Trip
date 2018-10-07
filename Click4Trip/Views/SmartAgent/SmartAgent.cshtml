@@ -1,0 +1,415 @@
+﻿@model Click4Trip.ViewModel.SmartAgentVM
+@{
+    ViewBag.Title = "SmartAgent";
+}
+
+<html>
+<head>
+    <style>
+        .tab {
+            float: left;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            width: 15%;
+            height: 400px;
+        }
+
+            /* Style the buttons that are used to open the tab content */
+            .tab button {
+                display: block;
+                background-color: inherit;
+                color: black;
+                padding: 18px 16px;
+                width: 100%;
+                border: none;
+                outline: none;
+                text-align: left;
+                cursor: pointer;
+                transition: 0.3s;
+            }
+
+                /* Change background color of buttons on hover */
+                .tab button:hover {
+                    background-color: #ddd;
+                }
+
+                /* Create an active/current "tab button" class */
+                .tab button.active {
+                    background-color: #ccc;
+                }
+
+        /* Style the tab content */
+        .tabcontent {
+            float: left;
+            padding: 0px 12px;
+            border: 1px solid #ccc;
+            width: 85%;
+            border-left: none;
+            height: 400px;
+        }
+        #myProgress {
+            width: 100%;
+            background-color: #e6e6e6;
+        }
+
+        #myBar {
+            width: 0%;
+            height: 20px;
+            background-color: dodgerblue;
+            text-align: center; /* To center it horizontally (if you want) */
+            line-height: 20px; /* To center it vertically */
+        }
+    </style>
+</head>
+<body>
+    <center>
+        <h2>Smart Agent</h2>
+        <br />
+    </center>
+    <div class="tab">
+        <button class="tablinks" onclick="openQuestion(event, 'Welcome')" id="defaultOpen">Welcome</button>
+        <button class="tablinks" onclick="openQuestion(event, 'Question1')" id="Q1">Question 1</button>
+        <button class="tablinks" onclick="openQuestion(event, 'Question2')" id="Q2">Question 2</button>
+        <button class="tablinks" onclick="openQuestion(event, 'Question3')" id="Q3">Question 3</button>
+        <button class="tablinks" onclick="openQuestion(event, 'Question4')" id="Q4">Question 4</button>
+        <button class="tablinks" onclick="openQuestion(event, 'Question5')" id="Q5">Question 5</button>
+        <button class="tablinks" onclick="openQuestion(event, 'End')" id="E">End</button>
+    </div>
+
+    <div id="Welcome" class="tabcontent">
+        <h3>Welcome</h3>
+        <p>Please take the time to answer 5 simple question that will help us offer you the most suitable destination for your vacation needs.</p>
+        <br />
+        <button type="button" @*id="Welcomebutt"*@ onclick="gotoQuestion('Welcome')">Start</button>
+    </div>
+    @using (Html.BeginForm("CalculateResults", "SmartAgent", FormMethod.Post, new { id = "myForm" }))
+    {
+        <div id="Question1" class="tabcontent">
+            <h3>Question 1</h3>
+            <p>Who are you going with?</p>
+            <label>
+                @Html.RadioButtonFor(m => m.Question1, "Friends",new { id = "c1"}) @*"Friends", new { Name = "Friends" })*@
+                Friends
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question1, "Family", new { id = "c2" }) @*"Family", new { Name = "Family" })*@
+                Family
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question1, "Partner", new { id = "c3" }) @*"Partner", new { Name = "Partner" })*@
+                Partner
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question1, "Alone", new { id = "c4" }) @*"Alone", new { Name = "Alone" })*@
+                Alone
+            </label>
+            <br />
+            <button type="button" @*id="Question1butt"*@ onclick="gotoQuestion('Question1')">Next Question</button>
+        </div>
+
+        <div id="Question2" class="tabcontent">
+            <h3>Question 2</h3>
+            <p>What activities would you like to do in your vacation?</p>
+            <label>
+                @Html.CheckBoxFor(m => m.Extreme, new { Name = "Extreme", id = "a1" })
+                Extreme
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Romantic, new { Name = "Romantic", id = "a2" })
+                Romantic
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Trek, new { Name = "Trek", id = "a3" })
+                Trek
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Nightlife, new { Name = "Nightlife", id = "a4" })
+                Nightlife
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Culture_Art, new { Name = "Culture_Art", id = "a5" })
+                Culture&Art
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Rest, new { Name = "Rest", id = "a6" })
+                Rest
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.FamilyFun, new { Name = "FamilyFun", id = "a7" })
+                Family Fun
+            </label>
+            <br />
+            <button type="button" @*id="Question2butt"*@ onclick="gotoQuestion('Question2')">Next Question</button>
+        </div>
+        <div id="Question3" class="tabcontent">
+            <h3>Question 3</h3>
+            <p>In what season would you like to go?</p>
+            <label>
+                @Html.RadioButtonFor(m => m.Question3, "Fall", new { id = "ss1" }) @*"Fall", new { Name = "Fall" })*@
+                Fall
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question3, "Winter", new { id = "ss2" }) @*"Winter", new { Name = "Winter" })*@
+                Winter
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question3, "Spring", new { id = "ss3" }) @*"Spring", new { Name = "Spring" })*@
+                Spring
+            </label>
+            <br />
+            <label>
+                @Html.RadioButtonFor(m => m.Question3, "Summer", new { id = "ss4" }) @*"Summer", new { Name = "Summer" })*@
+                Summer
+            </label>
+            <br />
+            <button type="button" @*id="Question3butt"*@ onclick="gotoQuestion('Question3')">Next Question</button>
+        </div>
+        <div id="Question4" class="tabcontent">
+            <h3>Question 4</h3>
+            <p>What are your hobbies?</p>
+            <label>
+                @Html.CheckBoxFor(m => m.Music, new { Name = "Music", id="h1" })
+                Music
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Sport, new { Name = "Sport", id = "h2" })
+                Sport
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Food_Drinks, new { Name = "Food_Drinks", id = "h3" })
+                Food&Drinks
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Museums, new { Name = "Museums", id = "h4" })
+                Museums
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Photography, new { Name = "Photography", id = "h5" })
+                Photography
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Shopping, new { Name = "Shopping", id = "h6" })
+                Shopping
+            </label>
+            <br />
+            <button type="button" @*id="Question4butt"*@ onclick="gotoQuestion('Question4')">Next Question</button>
+        </div>
+        <div id="Question5" class="tabcontent">
+            <h3>Question 5</h3>
+            <p>What is your desired vacation setting?</p>
+            <label>
+                @Html.CheckBoxFor(m => m.Urban, new { Name = "Urban", id = "s1" })
+                Urban
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Coastal, new { Name = "Coastal", id = "s2" })
+                Coastal
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Tropical, new { Name = "Tropical", id = "s3" })
+                Tropical
+            </label>
+            <br />
+            <label>
+                @Html.CheckBoxFor(m => m.Snowy, new { Name = "Snowy", id = "s4" })
+                Snowy
+            </label>
+            <br />
+            <button type="button" @*id="Question4butt"*@ onclick="gotoQuestion('Question5')">Finish</button>
+        </div>
+        <div id="End" class="tabcontent">
+            <h3>Thank you!</h3>
+            <p>Searching for the most suitable destination...</p>
+            <div id="myProgress">
+                <div id="myBar">0%</div>
+            </div>
+            <button type="submit" id="sub" onclick="move()" style="display:none;">Finish</button>
+        </div>
+    }
+
+
+    <script>
+        function openQuestion(evt, question) {
+            // Declare all variables
+            var i, tabcontent, tablinks;
+
+            // Get all elements with class="tabcontent" and hide them
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+
+            // Get all elements with class="tablinks" and remove the class "active"
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+
+            // Show the current tab, and add an "active" class to the link that opened the tab
+            document.getElementById(question).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+
+        function gotoQuestion(question) {
+            switch (question) {
+                case "Welcome":
+                    document.getElementById("Q1").click();
+                    break;
+                case "Question1":
+                    if (CheckQ1() == true) {
+                        document.getElementById("Q2").click();
+                        break;
+                    }
+                    else {
+                        return;
+                    }
+                case "Question2":
+                    if (CheckQ2() == true) {
+                        document.getElementById("Q3").click();
+                        break;
+                    }
+                    else {
+                        return;
+                    }
+                case "Question3":
+                    if (CheckQ3() == true) {
+                        document.getElementById("Q4").click();
+                        break;
+                    }
+                    else {
+                        return;
+                    }
+                case "Question4":
+                    if (CheckQ4() == true) {
+                        document.getElementById("Q5").click();
+                        break;
+                    }
+                    else {
+                        return;
+                    }
+                case "Question5":
+                    if (CheckQ5() == true) {
+                        document.getElementById("E").click();
+                        setTimeout(function () {
+                            $("#sub").trigger('click');
+                        }, 1600);
+                        break;
+                    }
+                    else {
+                        return;
+                    }
+            }
+        }
+        function move() {
+            var elem = document.getElementById("myBar");
+            var width = 10;
+            var id = setInterval(frame, 10);
+            function frame() {
+                if (width >= 100) {
+                    clearInterval(id);
+                } else {
+                    width++;
+                    elem.style.width = width + '%';
+                    elem.innerHTML = width * 1 + '%';
+                }
+            }
+        }
+        function CheckQ1() {
+            var v1 = $('#' + "c1").is(":checked");
+            var v2 = $('#' + "c2").is(":checked");
+            var v3 = $('#' + "c3").is(":checked");
+            var v4 = $('#' + "c4").is(":checked");
+
+            if (v1 == false && v2 == false && v3 == false && v4 == false) {
+                alert("Error! Please select something.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function CheckQ2() {
+            var v1 = $('#' + "a1").is(":checked");
+            var v2 = $('#' + "a2").is(":checked");
+            var v3 = $('#' + "a3").is(":checked");
+            var v4 = $('#' + "a4").is(":checked");
+            var v5 = $('#' + "a5").is(":checked");
+            var v6 = $('#' + "a6").is(":checked");
+            var v7 = $('#' + "a7").is(":checked");
+
+            if (v1 == false && v2 == false && v3 == false && v4 == false && v5 == false && v6 == false && v7 == false) {
+                alert("Error! Please select something.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function CheckQ3() {
+            var v1 = $('#' + "ss1").is(":checked");
+            var v2 = $('#' + "ss2").is(":checked");
+            var v3 = $('#' + "ss3").is(":checked");
+            var v4 = $('#' + "ss4").is(":checked");
+
+            if (v1 == false && v2 == false && v3 == false && v4 == false) {
+                alert("Error! Please select something.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function CheckQ4() {
+            var v1 = $('#' + "h1").is(":checked");
+            var v2 = $('#' + "h2").is(":checked");
+            var v3 = $('#' + "h3").is(":checked");
+            var v4 = $('#' + "h4").is(":checked");
+            var v5 = $('#' + "h5").is(":checked");
+            var v6 = $('#' + "h6").is(":checked");
+
+            if (v1 == false && v2 == false && v3 == false && v4 == false && v5 == false && v6 == false) {
+                alert("Error! Please select something.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+        function CheckQ5() {
+            var v1 = $('#' + "s1").is(":checked");
+            var v2 = $('#' + "s2").is(":checked");
+            var v3 = $('#' + "s3").is(":checked");
+            var v4 = $('#' + "s4").is(":checked");
+
+            if (v1 == false && v2 == false && v3 == false && v4 == false) {
+                alert("Error! Please select something.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+﻿@model Click4Trip.ViewModel.HotelSearchResultsVM
+<!doctype html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="row" style="width:600px;height:200px;margin:auto;">
+        <div class="col-md-3">
+            <a><img src="@Model.hotelImage" height="168" width="132" style="margin-left:-15px;cursor:pointer" onclick="submitForm('@Model.hotelLink',@Model.rating)"/></a>
+        </div>
+        <div class="col-md-8">
+            <a><h3 style="display:inline;margin-right:10px;cursor:pointer" onclick="submitForm('@Model.hotelLink',@Model.rating)">@Model.hotelName</h3></a>
+            <div style="margin-right:10px">
+                @for (int i = 0; i < 5; i++)
+                {
+                    if (i < Model.rating)
+                    {
+                        <span class="fa fa-star checked"></span>
+                    }
+                    else
+                    {
+                        <span class="fa fa-star"></span> 
+                    }
+                }
+            </div>
+            @if (@Model.hotelDescription!=null && @Model.hotelDescription.Length > 150)
+            {
+                <h5>@Model.hotelDescription.Substring(0, 150)... <small style="font-size:smaller;display:inline;color:dimgrey"title="@Model.hotelDescription"> Read More</small></h5>
+            }
+            else if (@Model.hotelDescription != null)
+            {
+                <h5>@Model.hotelDescription</h5>
+            }
+            <br />
+            <h5 style="border: 1px solid #000000;background-color:green;width:200px;">From: @Model.hotelPrice $ <small style="font-size:smaller;display:inline;color:dimgrey"> (per person)</small></h5>           
+        </div>
+    </div>
+</body>

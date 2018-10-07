@@ -1,0 +1,62 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click4Trip-Index</title>
+    <link rel="stylesheet" href="~/CSS/Styles1.css">
+</head>
+
+<body>
+    <div class="jumbotron"  id="myDiv">
+        <h2 style="color:darkgreen;" align="center">Quick Navigation for Site in Development</h2>
+        <h3 align="center">❌ - Work Not Done 🆗 - Work Done</h3>
+        <br />
+        <div class="row">
+            <div class="col-md-4" align="left">
+                <h2 style="color:brown;">quick access</h2>
+                <ol class="myOl">
+                    <li>@Html.ActionLink(" Login", "Login", "Home") 🆗</li>
+                    <li>@Html.ActionLink(" Logout", "Logout", "Home") 🆗</li>
+                    <li>@Html.ActionLink(" Add User", "AddUser", "Management") 🆗</li>
+                    <li>@Html.ActionLink(" Delete User", "DeleteUser", "Management") 🆗</li>
+                    <li>@Html.ActionLink(" Restore Password", "RestorePassword", "Management") 🆗</li>
+                    <li>@Html.ActionLink(" Write Review", "WriteReview", "Hotel") 🆗</li>
+                    <li>@Html.ActionLink(" Management", "Index", "Management") 🆗</li>
+                    <li>@Html.ActionLink(" SA- Delete Cities", "DeleteCities", "Management") 🆗</li>
+                    <li>@Html.ActionLink(" Quick Support Ticket", "ChangeOrder", "Support") 🆗</li>
+                    <li>@Html.ActionLink(" Hotel Search", "Index", "Hotel") 🆗</li>
+                    <li>@Html.ActionLink(" Support Ticket", "SupportTicket", "Support") 🆗</li>
+                    <li>@Html.ActionLink(" View Support Ticket", "ViewSupportTickets", "Service") 🆗</li>
+                    <li>@Html.ActionLink(" Flight Search", "Index", "Flight") 🆗</li>
+                    <li>@Html.ActionLink(" Package Search", "Index", "Package") 🆗</li>
+                    <li>@Html.ActionLink(" Delete Order", "OrderNumber", "Service") 🆗</li>
+                    <li>@Html.ActionLink(" Car Rent Search", "Index", "CarRent") 🆗</li>
+                    <li>@Html.ActionLink(" View Order (client)", "ViewOrder", "Support") ❌</li>
+                    <li>@Html.ActionLink(" View Order (Agent)", "ViewOrder", "Service") ❌</li>
+                    <li>@Html.ActionLink(" Order Confirmation", "OrderConfirmation", "Service") ❌</li>
+                    <li>@Html.ActionLink(" Smart Agent", "SmartAgent", "SmartAgent") 🆗</li>
+                </ol>
+            </div>
+
+        </div>
+        <br />
+        <br />
+        <h2 style="color:orangered;" align="center">Flowly Team</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <h3 style="color:blue;">Benjamin Kollet</h3>
+            </div>
+            <div class="col-md-4">
+                <h3 style="color:blue;">Michael Azarov</h3>
+            </div>
+            <div class="col-md-4">
+                <h3 style="color:blue;">Daniel Mashukov</h3>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

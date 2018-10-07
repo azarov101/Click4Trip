@@ -1,0 +1,645 @@
+﻿@model Click4Trip.ViewModel.GeneralIndexVM
+
+@{
+    ViewBag.Title = "NewIndex";
+}
+
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Raleway:400,500,700" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Tab Styles Inspiration</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    @*<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-ui-timepicker-addon/1.6.3/jquery-ui-timepicker-addon.min.css">*@
+    <script src="~/Scripts/modernizr.custom.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/normalize.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/tabs.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/tabstyles.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/NewIndex.css" />
+
+
+    <script>
+
+        $.noConflict();
+        jQuery(document).ready(function ($) {
+            var dateToday = new Date();
+            var dates = new Array(4);
+            for (var i = 0; i < 4; ++i) {
+                var odd = i * 2 + 1;
+                var even = i * 2 + 2;
+                dates[i] = $("#date" + odd + ", #date" + even).datepicker({
+                    defaultDate: "+1w",
+                    dateFormat: "dd.mm.yy",
+                    changeMonth: true,
+                    minDate: dateToday,
+                    onSelect: function (selectedDate) {
+                        var id = parseInt(this.id.substring(4));
+                        var index;
+
+                        if (id == 1 || id == 2) { index = 0; }
+                        else if (id == 3 || id == 4) { index = 1; }
+                        else if (id == 5 || id == 6) { index = 2; }
+                        else if (id == 7 || id == 8) { index = 3; }
+
+                        var option = this.className == "startDate hasDatepicker" ? "minDate" : "maxDate",
+                            instance = $(this).data("datepicker"),
+                            date = $.datepicker.parseDate(instance.settings.dateFormat || $.datepicker._defaults.dateFormat, selectedDate, instance.settings);
+                        dates[index].not(this).datepicker("option", option, date);
+                    }
+                });
+            }
+        });
+    </script>
+
+</head>
+
+<body>
+    <div class="container" id="myContainer" style="height:300px;  /*box-shadow: 0 0 50px 0 black inset*/">
+        <section>
+            <div class="tabs tabs-style-tzoid" style="width:65%;">
+                <nav>
+                    <ul id="myUl">
+                        <li><a href="#" class="icon" id="hotels"><i class="fas fa-building"></i>&nbsp;<span>Hotels</span></a></li>
+                        <li><a href="#" class="icon" id="flights"><i class="fas fa-plane"></i>&nbsp;<span>Flights</span></a></li>
+                        <li><a href="#" class="icon" id="cars"><i class="fas fa-car"></i>&nbsp;<span>Car Rental</span></a></li>
+                        <li><a href="#" class="icon" id="packages"><i class="fas fa-archive"></i>&nbsp;<span>Packages</span></a></li>
+                    </ul>
+                </nav>
+                <div class="content-wrap">
+                    <section id="section-tzoid-1">
+                        <div class="form-group" style="height:50px;">
+                            <div class="row">
+                                <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:35px;">Country</label>
+                                <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:28px;">City</label>
+                                <label class="col-md-2" style="text-align:center; color:black; font-size:12px; margin-left:-3px;">Start Date</label>
+                                <label class="col-md-2" style="text-align:center; color:black; font-size:12px; margin-left:-5px;">End Date</label>
+                            </div>
+                            <div class="col-md-3 DropDownListFor_countries"></div>
+                            <div class="col-md-3 DropDownListFor_cities"></div>
+                            <div class="col-md-2">
+                                @Html.TextBox("date1", null, new { type = "text", id = "date1", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "startDate" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.TextBox("date2", null ,new { type = "text", id = "date2", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "endDate" })
+                            </div>
+                            <div class="col-md-2">
+                                <button class="mySearchButton" id="hotel_button" onclick="SubmitSearchForm(this)">Search &nbsp;&nbsp;<i class="fas fa-search"></i></button>
+                            </div>
+                        </div>                    
+                    </section>
+                    @using (Html.BeginForm("SubmitSearchGeneral", "Hotel", FormMethod.Post, new { id = "hotelForm" }))
+                    {
+                        @Html.HiddenFor(x => x.desCountry, new { id = "hotel_desCountry" })
+                        @Html.HiddenFor(x => x.desCity, new { id = "hotel_desCity" })
+                        @Html.HiddenFor(x => x.startDate, new { id = "hotel_startDate" })
+                        @Html.HiddenFor(x => x.endDate, new { id = "hotel_endDate" })
+                    }
+
+
+                    <section id="section-tzoid-2">
+                        <div class="form-group" style="height:110px;">
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Origin Country</label>
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Origin City</label>
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Destination Country</label>
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Destination City</label>
+                            <div class="col-md-3 DropDownListFor_countries"></div>
+                            <div class="col-md-3 DropDownListFor_cities"></div>
+                            <div class="col-md-3 DropDownListFor_countries"></div>
+                            <div class="col-md-3 DropDownListFor_cities"></div>                          
+                            <div class="row">
+                                <div style="line-height:1.5;">
+                                    <br /><br /><br />
+                                </div>
+                                <label class="col-md-2 col-md-offset-4" style="text-align:center; color:black; font-size:12px;">Departure Date</label>
+                                <label class="col-md-2" style="text-align:center; color:black; font-size:12px; margin-left:-5px;">Return Date</label>
+                            </div>
+                            <div class="col-md-2 col-md-offset-4">
+                                @Html.TextBoxFor(x => x.startDate, new { type = "text", id = "date3", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "startDate" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.endDate, new { type = "text", id = "date4", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "endDate" })
+                            </div>
+                            <div class="col-md-2">
+                                <button class="mySearchButton" id="flight_button" onclick="SubmitSearchForm(this)">Search &nbsp;&nbsp;<i class="fas fa-search"></i></button>
+                            </div>
+                        </div>  
+                    </section>
+                    @using (Html.BeginForm("SubmitSearchGeneral", "Flight", FormMethod.Post, new { id = "flightForm" }))
+                    {
+                        @Html.HiddenFor(x => x.originCountry, new { id = "flight_originCountry" })
+                        @Html.HiddenFor(x => x.originCity, new { id = "flight_originCity" })
+                        @Html.HiddenFor(x => x.desCountry, new { id = "flight_desCountry" })
+                        @Html.HiddenFor(x => x.desCity, new { id = "flight_desCity" })
+                        @Html.HiddenFor(x => x.startDate, new { id = "flight_startDate" })
+                        @Html.HiddenFor(x => x.endDate, new { id = "flight_endDate" })
+                    }
+
+                    <section id="section-tzoid-3">
+                        <div class="form-group" style="height:50px;">
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Country</label>
+                            <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">City</label>
+                            <label class="col-md-2" style="text-align:center; color:black; font-size:12px; margin-left:-3px;">Pick-up Date</label>
+                            <label class="col-md-2" style="text-align:center; color:black; font-size:12px;">Return Date</label>
+
+                            <div class="col-md-3 DropDownListFor_countries"></div>
+                            <div class="col-md-3 DropDownListFor_cities"></div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.startDate, new { type = "text", id = "date5", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "startDate" })
+                            </div>
+                            <div class="col-md-2">
+                                @Html.TextBoxFor(x => x.endDate, new { type = "text", id = "date6", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "endDate" })
+                            </div>
+                            <div class="col-md-2">
+                                <button class="mySearchButton" id="car_button" onclick="SubmitSearchForm(this)">Search &nbsp;&nbsp;<i class="fas fa-search"></i></button>
+                            </div>
+                        </div>
+                    </section>
+                    @using (Html.BeginForm("SubmitSearchGeneral", "CarRent", FormMethod.Post, new { id = "carForm" }))
+                    {
+                        @Html.HiddenFor(x => x.desCountry, new { id = "car_desCountry" })
+                        @Html.HiddenFor(x => x.desCity, new { id = "car_desCity" })
+                        @Html.HiddenFor(x => x.startDate, new { id = "car_startDate" })
+                        @Html.HiddenFor(x => x.endDate, new { id = "car_endDate" })
+                    }
+
+                    <section id="section-tzoid-4">
+                        <div class="form-group" style="height:110px;">
+                            <div class="row">
+                                <label class="col-md-3  col-md-offset-1" style="text-align:left; color:black; font-size:12px; padding-left:20px;">Country</label>
+                                <label class="col-md-3" style="text-align:left; color:black; font-size:12px; padding-left:20px;">City</label>
+                                <label class="col-md-2" style="text-align:center; color:black; font-size:12px; margin-left:-3px;">Start Date</label>
+                                <label class="col-md-2" style="text-align:center; color:black; font-size:12px;">End Date</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3  col-md-offset-1 DropDownListFor_countries"></div>
+                                <div class="col-md-3 DropDownListFor_cities"></div>
+                                <div class="col-md-2">
+                                    @Html.TextBoxFor(x => x.startDate, new { type = "text", id = "date7", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "startDate" })
+                                </div>
+                                <div class="col-md-2">
+                                    @Html.TextBoxFor(x => x.endDate, new { type = "text", id = "date8", size = "12", placeholder = "Click Here", align = "center", @readonly = "readonly", @class = "endDate" })
+                                </div>
+                            </div>
+                            <div class="row">
+                                <br />
+                                <label class="col-md-3" style="text-align:left; color:black; font-size:12px; margin-top:-7px; margin-left:255px;">Composition</label>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3 col-md-offset-3">
+                                    @Html.DropDownListFor(x => x.compositions, new SelectList(Model.compositions), new { @class = "form-control", id = "compositions", align = "center" })
+                                </div>
+                                <div class="col-md-2">
+                                    <button class="mySearchButton" id="package_button" onclick="SubmitSearchForm(this)">Search &nbsp;&nbsp;<i class="fas fa-search"></i></button>
+                                </div>
+                            </div>
+                            </div>
+                    </section>
+                    @using (Html.BeginForm("SubmitSearchGeneral", "Package", FormMethod.Post, new { id = "packageForm" }))
+                    {
+                        @Html.HiddenFor(x => x.desCountry, new { id = "package_desCountry" })
+                        @Html.HiddenFor(x => x.desCity, new { id = "package_desCity" })
+                        @Html.HiddenFor(x => x.startDate, new { id = "package_startDate" })
+                        @Html.HiddenFor(x => x.endDate, new { id = "package_endDate" })
+                        @Html.HiddenFor(x => x.composition, new { id = "package_composition" })
+                    }
+
+                </div><!-- /content -->
+            </div><!-- /tabs -->
+        </section>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+    <!-- ----------------------------------------------------------- Hotel Part ----------------------------------------------------------- -->
+    <div class="row" style="width: 100%;">
+        <p style="font-weight:bold; font-size: 40px; margin-bottom: -30px;">Random Hotels</p>
+        <center id="hotelLoader">
+            <div class="loader"></div>
+            @*<img src="https://i.imgur.com/X4tmv70.jpg" />*@
+        </center>
+        <div id="hotel" style="display: grid; grid-gap: 5px; grid-template-columns: 25% 25% 25% 25%; position: relative; margin-left:auto; margin-right: auto; overflow: hidden">
+            @for (int i = 0; i < 4; ++i)
+            {
+                <div id="hotelBox@(i + 1)" style="grid-column: @(i + 1);">
+                    <img id="hotelImage@(i + 1)" style="background-size: cover; width:245px; height:165px;" />
+                    <center id="hotelRating@(i + 1)" style="margin-left: auto; margin-right: auto; margin-top: 10px; font-size:9px;">
+                    </center>
+
+                    <div id="hotelName@(i + 1)" style="padding-left:10px; padding-right:10px; padding-top:10px; font-size:18px; color:black;">@*@Model.hotels[i].hotelName*@</div>
+                    <div id="hotelLocation@(i + 1)" style="color:#808386; font-size:12px; padding-left:10px; padding-right:10px;"> @*London, UK*@</div>
+                    <div id="hotelDates@(i + 1)" style="color:#808386; font-size:12px; padding-left:10px; padding-right:10px;"> @*18.06.2018 - 25.06.2018*@</div>
+                    <br />
+                    <div id="hotelPrice@(i + 1)" style="font-size:18px; color:black; float:right; bottom:14%; right:9%; position:absolute; padding-right: 5px;">@*$@Model.hotels[i].hotelPrice*@ </div>
+
+                    <button class="myButton" id="button@(i)" onclick="SubmitSHotelForm(@(i))">Order</button>
+                    <small style="font-size:smaller; color:dimgrey; position:absolute; bottom:1%; left:1%;">price per adult</small>
+                </div>
+                }
+        </div>
+    </div>
+
+    @using (Html.BeginForm("ViewHotelInfoGeneral", "Hotel", FormMethod.Post, new { id = "randomHotelForm" }))
+    {
+        @Html.HiddenFor(x => x.hotelId, new { id = "randomHotel_hotelId" })
+        @Html.HiddenFor(x => x.hotelRating, new { id = "randomHotel_hotelRating" })
+        @Html.HiddenFor(x => x.originalLink, new { id = "randomHotel_originalLink" })
+        @Html.HiddenFor(x => x.startDate, new { id = "randomHotel_startDate" })
+        @Html.HiddenFor(x => x.endDate, new { id = "randomHotel_endDate" })
+        @Html.HiddenFor(x => x.nights, new { id = "randomHotel_nights" })
+        @Html.HiddenFor(x => x.desCountry, new { id = "randomHotel_desCountry" })
+    }
+    <!-- ----------------------------------------------------------------------------------------------------------------------------------- -->
+
+    <br /><br /><br /><br />
+
+    <!-- ----------------------------------------------------------- Location Part ----------------------------------------------------------- -->
+    <div class="row" style="width: 100%;">
+        <p style="font-weight:bold; font-size: 40px; margin-bottom: -30px;">Recommended Locations</p>
+        <center id="locationLoader">
+            <div class="loader"></div>
+            @*<img src="https://i.imgur.com/X4tmv70.jpg" />*@
+        </center>
+        <div id="locations">
+            <div style="display: grid; grid-gap: 5px; grid-template-columns: 50% 50%; position: relative; margin-left:auto; margin-right: auto; overflow: hidden;">
+                @for (int i = 0; i < 2; ++i)
+                {
+                    <div id="locationBox@(i+1)" style="grid-column: @(i+1); cursor:pointer;" onclick="SetLocation(@(i))">
+                        <img id="locationImage@(i+1)" style="background-size: cover; width:530px; height:290px;" />
+
+                        <div id="locationName@(i+1)" style="padding-left:10px; padding-right:10px; padding-top:10px; font-size:16px; color:black; font-weight:bold; text-align:center;"> </div>
+                    </div>
+                }
+            </div>
+            <div style="display: grid; grid-gap: 5px; grid-template-columns: 50% 50%; position: relative; margin-left:auto; margin-right: auto; overflow: hidden;">
+                @for (int i = 2, j = 0; i < 4; ++i, ++j)
+                {
+                    <div id="locationBox@(i+1)" style="grid-column: @(j+1); cursor:pointer;" onclick="SetLocation(@(i))">
+                        <img id="locationImage@(i+1)" style="background-size: cover; width:530px; height:290px;" />
+
+                        <div id="locationName@(i+1)" style="padding-left:10px; padding-right:10px; padding-top:10px; font-size:16px; color:black; font-weight:bold; text-align:center;"> </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+    <!-- ----------------------------------------------------------------------------------------------------------------------------------- -->
+
+
+    <script>
+        document.getElementById("myContainer").style.backgroundImage = "url('https://i.imgur.com/y80o8gf.jpg')";
+        document.getElementById("hotel").style.display = "none";
+        document.getElementById("locations").style.display = "none";
+        SetOpacity(0);
+        var destinations; // all the cities from our DB
+        var randomHotels;
+        var randomLocations;
+
+        $.get("GetDestinationsByJson", null, BindDestinations); // get locations from the server
+
+        
+
+
+        function BindDestinations(obj) {
+            destinations = obj[1]; // the cities
+
+            // --------------- create DropDownList for the countries ---------------
+            var div = document.querySelectorAll(".DropDownListFor_countries");
+            for (var j = 0; j < div.length; ++j) {
+                var frag = document.createDocumentFragment(),
+                    select = document.createElement("select");
+
+                // add all the countries to the DropDownList
+                for (var i = 0; i < obj[0].length; ++i) {
+                    if (i == 0) {
+                        select.options.add(new Option(obj[0][i], obj[0][i], true, true));
+                    }
+                    else {
+                        select.options.add(new Option(obj[0][i], obj[0][i]));
+                    }
+                }
+                select.classList.add("form-control"); // add class to the DropDownList
+                select.classList.add("DDL_countries"); // add class to the DropDownList
+                //select.style.width = "175px";
+                //select.style.marginLeft = "15px";
+                select.setAttribute("onchange", "getCities(this.value, this)"); // add 'onchange' attribute to the countries DropDownList
+                frag.appendChild(select);
+                div[j].appendChild(frag);
+            }
+            // --------------------------------------------------------------------
+
+            // --------------- create DropDownList for the cities ---------------
+            div = document.querySelectorAll(".DropDownListFor_cities");
+            for (var j = 0; j < div.length; ++j) {
+                var frag = document.createDocumentFragment(),
+                    select = document.createElement("select");
+                select.classList.add("form-control"); // add class to the DropDownList
+                select.classList.add("DDL_cities"); // add class to the DropDownList
+                //select.style.width = "175px";
+                //select.style.marginLeft = "15px";
+                frag.appendChild(select);
+                div[j].appendChild(frag);
+            }
+            // --------------------------------------------------------------------
+
+            getCities("INIT", null); // call the function for the first value
+            //$.get("GetRandomHotelsByJson", null, BindHotels); // get random hotels from the server
+
+            // create array of locations to pass to the controller
+            var arr = [];
+            for (var i = 0; i < obj[1].length; ++i) {
+                arr.push(obj[1][i]);
+            }
+
+            $.ajax({
+                url: '/Home/GetRandomHotelsByJson',
+                type: "POST",
+                dataType: "JSON",
+                data: { loc: arr },
+                success: function (data) { BindHotels(data); }
+            });
+        }
+
+        function BindHotels(obj) {
+            var hotels = obj.hotels;
+            randomHotels = obj.hotels; // global var
+            for (k = 0; k < hotels.length; ++k) {
+                $("#hotelImage" + (k + 1)).attr("src", hotels[k].hotelImage);
+
+                for (var i = 0; i < 5; ++i) {
+                    var span = document.createElement("SPAN");
+                    if (i < hotels[k].rating) {
+                        span.className = "fa fa-star checked";
+                        document.getElementById("hotelRating" + (k + 1)).appendChild(span);
+                    }
+                    else {
+                        span.className = "fa fa-star";
+                        document.getElementById("hotelRating" + (k + 1)).appendChild(span);
+                    }
+                }
+                document.getElementById("hotelName" + (k + 1)).innerHTML = hotels[k].hotelName;
+                document.getElementById("hotelLocation" + (k + 1)).innerHTML = hotels[k].location;
+                document.getElementById("hotelDates" + (k + 1)).innerHTML = hotels[k].startDate + " - " + hotels[k].endDate;
+
+                var len = JSON.stringify(hotels[k].hotelPrice).length;
+
+                if (len == 3) {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "9%";
+                }
+                else if (len == 4) {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "8%";
+                }
+                else if (len == 5) {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "6%";
+                }
+                else if (len == 6) {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "4%";
+                }
+                else if (len == 7) {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "3%";
+                }
+                else {
+                    document.getElementById("hotelPrice" + (k + 1)).style.right = "1%";
+                }
+                document.getElementById("hotelPrice" + (k + 1)).innerHTML = "$" + hotels[k].hotelPrice;
+            }
+            $("#hotelLoader").remove();
+            document.getElementById("hotel").style.display = "grid";
+
+            $.ajax({
+                url: "https://geoip-db.com/jsonp",
+                jsonpCallback: "callback",
+                dataType: "jsonp",
+                success: function (location) {
+                    var locApi = location.country_name;
+                    $.get("GetBestLocationsByJson", { locApi: locApi }, BindLocations); // get 4 best locations from the server (smart agent)                
+                }
+            }); 
+
+            document.getElementById("randomHotel_nights").value = obj.nights;
+        }
+
+        function BindLocations(obj) {
+            randomLocations = obj;
+            for (var i = 0; i < obj.length; ++i) {
+                $("#locationImage" + (i + 1)).attr("src", obj[i].Image);
+                document.getElementById("locationName" + (i + 1)).innerHTML = obj[i].Location;
+            }
+            $("#locationLoader").remove();
+            document.getElementById("locations").style.display = "grid";
+        }
+
+        function getCities(val, obj) {
+            /* this function loads the cities of the selected country */
+            var country, select;
+
+            if (val == "INIT") {
+                select = $('.DDL_cities');
+                country = $('.DDL_countries');
+                for (var i = 0; i < country.length; ++i) {
+                    select[i].options.length = 0; // remove previous values from the cities DropDownList
+                    select[i].options.add(new Option("Kabul", "Kabul", true, true));
+                    country[i].selectedIndex = 0;
+                }
+            }
+
+            else {
+                select = obj.parentElement.nextElementSibling.firstChild; // get the cities DropDownList
+                select.options.length = 0; // remove previous values from the cities DropDownList
+
+                var counter = 0;
+                for (var i = 0; i < destinations.length; ++i) {
+                    var str = destinations[i].split(',');
+                    if (str[0] == val) {
+                        if (counter == 0) {
+                            select.options.add(new Option(str[1], str[1], true, true));
+                        }
+                        else {
+                            select.options.add(new Option(str[1], str[1]));
+                        }
+                        ++counter;
+                    }
+                }
+            }
+        }
+
+        function InitDates(id) {
+            var dates = document.querySelectorAll(".startDate , .endDate");
+            for (var i = 0; i < dates.length; ++i) {
+                if (i != (id * 2) && i != (id * 2 + 1)) {
+                    dates[i].value = "";
+                }
+            }
+        }
+
+        // --------------- events that change when clicking the tabs ---------------
+        $('#hotels').click(function () {
+            document.getElementById("myContainer").style.backgroundImage = "url('https://i.imgur.com/y80o8gf.jpg')";
+            SetOpacity(0);
+            InitDates(0);
+            getCities("INIT", null); // reset the DropDownLists
+            //document.getElementById("locationBox1").click(); // this shit only for debugging!!!
+        });
+        $('#flights').click(function () {
+            document.getElementById("myContainer").style.backgroundImage = "url('https://i.imgur.com/4nQrtsh.jpg')";
+            SetOpacity(1);
+            InitDates(1);
+            getCities("INIT", null); // reset the DropDownLists
+        });
+        $('#cars').click(function () {
+            document.getElementById("myContainer").style.backgroundImage = "url('https://i.imgur.com/MeEbmR9.jpg')";
+            SetOpacity(2);
+            InitDates(2);
+            getCities("INIT", null); // reset the DropDownLists
+        });
+        $('#packages').click(function () {
+            document.getElementById("myContainer").style.backgroundImage = "url('https://i.imgur.com/z8RLEQp.jpg')";
+            //document.getElementById("myContainer").style.background = "linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('https://i.imgur.com/z8RLEQp.jpg')";
+            SetOpacity(3);
+            InitDates(3);
+            getCities("INIT", null); // reset the DropDownLists
+        });
+        // -------------------------------------------------------------------------
+
+        function SetOpacity(currentLi) {
+            /* Design only: this function set the opacity of the tabs */
+            var ul = document.getElementById("myUl").children;
+            for (var i = 0; i < ul.length; ++i) {
+                ul[i].style.opacity = "0.8";
+            }
+            ul[currentLi].style.opacity = "0.95";
+        }
+
+        function SubmitSearchForm(obj) {
+            if (obj.id == "hotel_button") {
+                var desCountry = obj.parentElement.parentElement.children[1].children[0].value;
+                var desCity = obj.parentElement.parentElement.children[2].children[0].value;
+                var startDate = obj.parentElement.parentElement.children[3].children[0].value;
+                var endDate = obj.parentElement.parentElement.children[4].children[0].value;
+
+                if (desCountry == "" || desCity == "" || startDate == "" || endDate == "") {
+                    return;
+                }
+
+                document.getElementById("hotel_desCountry").value = desCountry;
+                document.getElementById("hotel_desCity").value = desCity;
+                document.getElementById("hotel_startDate").value = startDate;
+                document.getElementById("hotel_endDate").value = endDate;
+                document.getElementById("hotelForm").submit();
+            }
+
+            else if (obj.id == "flight_button") {
+                var originCountry = obj.parentElement.parentElement.children[4].children[0].value;
+                var originCity = obj.parentElement.parentElement.children[5].children[0].value;
+                var desCountry = obj.parentElement.parentElement.children[6].children[0].value;
+                var desCity = obj.parentElement.parentElement.children[7].children[0].value;
+                var startDate = obj.parentElement.parentElement.children[9].children[0].value;
+                var endDate = obj.parentElement.parentElement.children[10].children[0].value;
+
+                if (originCountry == "" || originCity == "" || desCountry == "" || desCity == "" || startDate == "" || endDate == "") {
+                    return;
+                }
+
+                document.getElementById("flight_originCountry").value = originCountry;
+                document.getElementById("flight_originCity").value = originCity;
+                document.getElementById("flight_desCountry").value = desCountry;
+                document.getElementById("flight_desCity").value = desCity;
+                document.getElementById("flight_startDate").value = startDate;
+                document.getElementById("flight_endDate").value = endDate;
+                document.getElementById("flightForm").submit();
+            }
+
+            else if (obj.id == "car_button") {
+                var desCountry = obj.parentElement.parentElement.children[4].children[0].value;
+                var desCity = obj.parentElement.parentElement.children[5].children[0].value;
+                var startDate = obj.parentElement.parentElement.children[6].children[0].value;
+                var endDate = obj.parentElement.parentElement.children[7].children[0].value;
+
+                if (desCountry == "" || desCity == "" || startDate == "" || endDate == "") {
+                    return;
+                }
+
+                document.getElementById("car_desCountry").value = desCountry;
+                document.getElementById("car_desCity").value = desCity;
+                document.getElementById("car_startDate").value = startDate;
+                document.getElementById("car_endDate").value = endDate;
+                document.getElementById("carForm").submit();
+            }
+
+            else if (obj.id == "package_button") {
+                var desCountry = obj.parentElement.parentElement.parentElement.children[1].children[0].children[0].value;
+                var desCity = obj.parentElement.parentElement.parentElement.children[1].children[1].children[0].value;
+                var startDate = obj.parentElement.parentElement.parentElement.children[1].children[2].children[0].value;
+                var endDate = obj.parentElement.parentElement.parentElement.children[1].children[3].children[0].value;
+                var composition = obj.parentElement.parentElement.children[0].children[0].value;
+
+                if (desCountry == "" || desCity == "" || startDate == "" || endDate == "" || composition == "") {
+                    return;
+                }
+
+                document.getElementById("package_desCountry").value = desCountry;
+                document.getElementById("package_desCity").value = desCity;
+                document.getElementById("package_startDate").value = startDate;
+                document.getElementById("package_endDate").value = endDate;
+                document.getElementById("package_composition").value = composition;
+                document.getElementById("packageForm").submit();
+            }
+        }
+
+        function SubmitSHotelForm(index) {
+            document.getElementById("randomHotel_hotelId").value = randomHotels[index].hotelLink;
+            document.getElementById("randomHotel_hotelRating").value = randomHotels[index].rating;
+            document.getElementById("randomHotel_originalLink").value = randomHotels[index].originalLink;
+            document.getElementById("randomHotel_startDate").value = randomHotels[index].startDate;
+            document.getElementById("randomHotel_endDate").value = randomHotels[index].endDate;
+            document.getElementById("randomHotel_desCountry").value = randomHotels[index].location;
+
+            document.getElementById("randomHotelForm").submit();
+        }
+
+        function Capitalize(str) {
+            /* This function make first letter upper and all the rest lower */
+            var firstLetter = str.slice(0, 1).toUpperCase(); //get the first character and make it Uppercase
+            var rest = str.slice(1).toLowerCase(); //get the rest of the string and make it Lowercase
+            return firstLetter.concat(rest); //create the new word and return it
+        }
+
+        function SetLocation(index) {
+            document.getElementById("packages").click(); // trigger click event to show the package tab
+            var str = randomLocations[index].Location.split(', ');
+
+            if (str[0] == "Andorra") { // exeption only for this place
+                str[1] = "Andorra";
+            }
+
+            if (str[1].charAt(str[1].length - 1) == ' ') {
+                str[1] = str[1].substring(0, str[1].length - 1); // remove space in the end
+            }
+
+            str[1] = Capitalize(str[1]); // make first letter upper and all the rest lower
+            
+            document.getElementById("section-tzoid-4").children[0].children[1].children[0].children[0].value = str[1]; // change the country on the package tab
+            document.getElementById("section-tzoid-4").children[0].children[1].children[0].children[0].onchange(); // trigger an event to change the city
+            $('html, body').animate({ scrollTop: 0 }, 'fast'); // scroll to the top of the page
+        }
+    </script>
+    @*<script src="~/Scripts/cbpFWTabs.js"></script>*@
+    <script src="~/Scripts/cbpFWTabs.min.js"></script>
+    <script>
+        (function () {
+
+            [].slice.call(document.querySelectorAll('.tabs')).forEach(function (el) {
+                new CBPFWTabs(el);
+            });
+
+        })();
+    </script>
+</body>
+</html>

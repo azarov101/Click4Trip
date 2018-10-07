@@ -1,0 +1,332 @@
+﻿@model Click4Trip.ViewModel.PackageDetailsVM
+
+@{
+    ViewBag.Title = "Search Results";
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/SearchResults.css" />
+    <title>Search Results</title>
+</head>
+
+<body>
+
+    <div class="container" id="myContainer" style="background-image: url('https://i.imgur.com/eKzGrGp.png');">
+        <div style="background-color: rgba(0, 0, 0, 0.5); margin-left:auto; margin-right:auto; margin-top:20px; width:80%; padding-left:20px; padding-top:10px; padding-bottom:10px; padding-right:20px;">
+            <div style="color:white; font-weight:bold; font-size:26px;">@Model.packages[0].flight.originCountry, @Model.packages[0].flight.originCity &nbsp;&nbsp; <i class="fas fa-long-arrow-alt-right"></i> &nbsp;&nbsp; @Model.packages[0].flight.destinationCountry, @Model.packages[0].flight.destinationCity &nbsp;&nbsp;&nbsp;&nbsp; ,@Model.packages[0].flight.departureDate</div>
+            <br />
+            <div style="color:white; font-weight:bold; font-size:26px;">@Model.packages[0].flight.destinationCountry, @Model.packages[0].flight.destinationCity &nbsp;&nbsp; <i class="fas fa-long-arrow-alt-right"></i> &nbsp;&nbsp; @Model.packages[0].flight.originCountry, @Model.packages[0].flight.originCity &nbsp;&nbsp;&nbsp;&nbsp; ,@Model.packages[0].flight.returnDate</div>
+            <br />
+            <div style="color:white; font-weight:bold; font-size:26px;"> @Model.composition </div>
+        </div>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    @if (Model.latitude == 0)
+    {
+        <h2>No results!</h2>
+    }
+    else
+    {
+        <div class="row">
+            <div class="l-sidebar col-md-3 col-md-right-0 col-md-right-0 padd-large-left margin-0-bottom" data-mcs-theme="wide">
+                <div style="height:28px;"></div>
+                <div class="text-center" style="background-color:white;">
+                    <br />
+                    <div id="map" style="height: 250px; width: 90%; margin:auto;"></div>
+                    <br /><br />
+                    <label>Sort by Name:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTable('hotelName','asc')">A - Z</button>
+                        <button class="button" onclick="sortTable('hotelName','desc')" style="margin-left:25px;">Z - A</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Price:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTableNum('asc')">Low-High</button>
+                        <button class="button" onclick="sortTableNum('desc')" style="margin-left:25px;">High-Low</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Outbound Hour:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTable('outbound','asc')">Soon-Later</button>
+                        <button class="button" onclick="sortTable('outbound','desc')" style="margin-left:25px;">Later-Soon</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Price Range:</label>
+                    @{
+                        double min = Model.packages.First().price;
+                        double max = min;
+                        for (int i = 0; i < Model.packages.Count; ++i)
+                        {
+                            if (Model.packages[i].price < min)
+                            {
+                                min = Model.packages[i].price;
+                            }
+                            if (Model.packages[i].price > max)
+                            {
+                                max = Model.packages[i].price;
+                            }
+                        }
+                    }
+
+                    <div id="slidecontainer" style="padding-left:15px; padding-right:15px;">
+                        <input type="range" min="@min" max="@max" value="@max" class="slider" id="myRange" onchange="filterTable()">
+                        <p style="font-size:small; margin-top:-10px;"><span style="float:left;"> @min </span> <span id="demo" style="float:right;"></span></p>
+                        <br />
+                    </div>
+                </div>
+            </div>
+
+
+            <div id="packagesResultSection" class="col-md-9">
+                <div style="color:black; font-size:14px; font-weight:500; padding-bottom:8px;"> @Model.packages.Count Results Were Found</div>
+                @for (int i = 0; i < Model.packages.Count; ++i)
+                {
+                    <div class="packageBoxParent">
+
+                        <div class="packageBox">
+                            <div style="grid-column: 1; grid-row: 1;">
+                                <a><img src="@Model.packages[i].hotel.hotelImage" style="width:235px; height:158px; cursor:pointer" onclick="submitForm('@Model.packages[i].hotel.hotelLink',@Model.packages[i].hotel.rating, @i)" /></a>
+                            </div>
+
+                            <div style="grid-column: 2; grid-row: 1;">
+                                <div style="margin-left:10px; margin-right:10px; font-size:20px; color:black;">
+                                    @Model.packages[i].hotel.hotelName &nbsp;
+                                    <span style="display:inline-block; vertical-align:middle; font-size:10px;">
+                                        @for (int j = 0; j < 5; j++)
+                                        {
+                                            if (j < Model.packages[i].hotel.rating)
+                                            {
+                                                <span class="fa fa-star checked"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="fa fa-star unchecked"></span>
+                                            }
+                                        }
+                                    </span>
+                                    <span style="display:none;">@Model.packages[i].hotel.rating</span>
+                                </div>
+                                <br />
+                                <div style="display: grid; grid-template-columns: 45% 45% 10%; position: relative;">
+                                    <div style="grid-column: 1; grid-row: 1;">
+                                        <br />
+                                        <div style="margin-left:10px; margin-right:10px; font-size:14px; color:black;"> Outbound: @Model.packages[i].flight.originCity <i class="fas fa-long-arrow-alt-right"></i> @Model.packages[i].flight.destinationCity </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Direct Flight </div>
+                                        <br />
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Departure: &nbsp;&nbsp; @Model.packages[i].flight.outbound.DepartureTime, @Model.packages[i].flight.outbound.DepartureDay </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Arrival: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.packages[i].flight.outbound.ArrivalTime, @Model.packages[i].flight.outbound.ArrivalDay </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Total: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.packages[i].flight.outbound.TimeDuration Hrs. </div>
+
+                                        <div style="display:none;">@Model.packages[i].flight.outbound.DepartureTime</div>
+                                    </div>
+
+                                    <div style="grid-column: 2; grid-row: 1;">
+                                        <br />
+                                        <div style="margin-left:10px; margin-right:10px; font-size:14px; color:black;"> Inbound: @Model.packages[i].flight.destinationCity <i class="fas fa-long-arrow-alt-right"></i> @Model.packages[i].flight.originCity </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Direct Flight </div>
+                                        <br />
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Departure: &nbsp;&nbsp; @Model.packages[i].flight.inbound.DepartureTime, @Model.packages[i].flight.inbound.DepartureDay </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Arrival: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.packages[i].flight.inbound.ArrivalTime, @Model.packages[i].flight.inbound.ArrivalDay </div>
+                                        <div style="margin-left:10px; margin-right:10px; font-size:12px;"> Total: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.packages[i].flight.inbound.TimeDuration Hrs. </div>
+
+                                        <div style="display:none;">@Model.packages[i].flight.inbound.DepartureTime</div>
+                                    </div>
+                                    <div style="grid-column: 3; grid-row: 1;">
+                                        <div style="font-size:18px; color:black; float:right; bottom:35%; right:3.5%; position:absolute; padding-right: 5px;">$@Model.packages[i].price </div>
+                                        <button class="myButton" id="button@(i)" onclick="submitForm(@i)" style="bottom:5%;">Order</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br /><br />
+                    </div>
+                }
+            </div>
+
+        </div>
+        using (Html.BeginForm("ViewPackageInfo", "Package", FormMethod.Post, new { id = "myForm" }))
+        {
+            <div style="display:none">
+                @for (int i = 0; i < Model.packages.Count; i++)
+                {
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.ArrivalAirportCode, new { value = Model.packages[i].flight.outbound.ArrivalAirportCode })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.ArrivalAirportName, new { value = Model.packages[i].flight.outbound.ArrivalAirportName })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.DepartureAirportName, new { value = Model.packages[i].flight.outbound.DepartureAirportName })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.ArrivalDay, new { value = Model.packages[i].flight.outbound.ArrivalDay })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.DepartureDay, new { value = Model.packages[i].flight.outbound.DepartureDay })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.ArrivalDate, new { value = Model.packages[i].flight.outbound.ArrivalDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.ArrivalTime, new { value = Model.packages[i].flight.outbound.ArrivalTime })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.DepartureAirportCode, new { value = Model.packages[i].flight.outbound.DepartureAirportCode })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.DepartureDate, new { value = Model.packages[i].flight.outbound.DepartureDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.DepartureTime, new { value = Model.packages[i].flight.outbound.DepartureTime })
+                    @Html.HiddenFor(x => x.packages[i].flight.outbound.FlightNumber, new { value = Model.packages[i].flight.outbound.FlightNumber })
+
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.ArrivalAirportCode, new { value = Model.packages[i].flight.inbound.ArrivalAirportCode })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.ArrivalAirportName, new { value = Model.packages[i].flight.inbound.ArrivalAirportName })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.DepartureAirportName, new { value = Model.packages[i].flight.inbound.DepartureAirportName })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.ArrivalDay, new { value = Model.packages[i].flight.inbound.ArrivalDay })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.DepartureDay, new { value = Model.packages[i].flight.inbound.DepartureDay })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.ArrivalDate, new { value = Model.packages[i].flight.inbound.ArrivalDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.ArrivalTime, new { value = Model.packages[i].flight.inbound.ArrivalTime })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.DepartureAirportCode, new { value = Model.packages[i].flight.inbound.DepartureAirportCode })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.DepartureDate, new { value = Model.packages[i].flight.inbound.DepartureDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.DepartureTime, new { value = Model.packages[i].flight.inbound.DepartureTime })
+                    @Html.HiddenFor(x => x.packages[i].flight.inbound.FlightNumber, new { value = Model.packages[i].flight.inbound.FlightNumber })
+
+                    @Html.HiddenFor(x => x.packages[i].flight.seatsRemaining, new { value = Model.packages[i].flight.seatsRemaining })
+                    @Html.HiddenFor(x => x.packages[i].flight.airline, new { value = Model.packages[i].flight.airline })
+                    @Html.HiddenFor(x => x.packages[i].flight.price, new { value = Model.packages[i].flight.price })
+
+                    @Html.HiddenFor(x => x.packages[i].flight.departureDate, new { value = Model.packages[i].flight.departureDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.returnDate, new { value = Model.packages[i].flight.returnDate })
+                    @Html.HiddenFor(x => x.packages[i].flight.originCountry, new { value = Model.packages[i].flight.originCountry })
+                    @Html.HiddenFor(x => x.packages[i].flight.originCity, new { value = Model.packages[i].flight.originCity })
+                    @Html.HiddenFor(x => x.packages[i].flight.destinationCountry, new { value = Model.packages[i].flight.destinationCountry })
+                    @Html.HiddenFor(x => x.packages[i].flight.destinationCity, new { value = Model.packages[i].flight.destinationCity })
+                    @Html.HiddenFor(x => x.packages[i].flight.originCodeCity, new { value = Model.packages[i].flight.originCodeCity })
+                    @Html.HiddenFor(x => x.packages[i].flight.destinationCodeCity, new { value = Model.packages[i].flight.destinationCodeCity })
+
+                    @Html.HiddenFor(x => x.packages[i].hotel.hotelLink, new { id = "hotelid", value = Model.packages[i].hotel.hotelLink })
+                    @Html.HiddenFor(x => x.packages[i].hotel.originalLink, new { value = Model.packages[i].hotel.originalLink })
+
+                    @Html.HiddenFor(x => x.packages[i].hotel.rating, new { id = "hotelRating", value = Model.packages[i].hotel.rating })
+
+                    @Html.HiddenFor(x => x.packages[i].price, new { value = Model.packages[i].price })
+                }
+
+
+                @Html.HiddenFor(x => x.nights, new { value = Model.nights })
+                @Html.HiddenFor(x => x.composition, new { value = Model.composition })
+                @Html.HiddenFor(x => x.selectedPack, new { id = "selectedPack" })
+
+            </div>
+        }
+    }
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = this.value;
+        }
+
+        function filterTable() {
+            var input, filter, table, package, price, i;
+            input = document.getElementById("myRange");
+            filter = parseInt(input.value, 10);
+            table = document.getElementById("packagesResultSection");
+            package = table.getElementsByClassName("packageBoxParent"); // each package
+            for (i = 0; i < package.length; i++) { // for each row (package)
+                price = (package[i].children[0].children[1].children[2].children[2].children[0].innerHTML.toString()).substring(1);
+                debugger
+                if (parseInt(price, 10) <= filter) { // take the price
+                    package[i].style.display = ""; // show it
+                } else {
+                    package[i].style.display = "none"; // hide it
+                }
+
+            }
+        }
+
+        function sortTableNum(dir) {
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("packagesResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("packageBoxParent"); // take all the rows (packages)
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    x = (rows[i].children[0].children[1].children[2].children[2].children[0].innerHTML.toString()).substring(1); // this package price
+                    y = (rows[i + 1].children[0].children[1].children[2].children[2].children[0].innerHTML.toString()).substring(1); // the next package price                   
+
+                    if (dir == "asc") {
+                        if (parseInt(x, 10) > parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (parseInt(x, 10) < parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function sortTable(type, dir) {
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("packagesResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("packageBoxParent");
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    if (type == "outbound") {
+                        x = rows[i].children[0].children[1].children[2].children[0].children[7].innerHTML.toString(); // this package hour
+                        y = rows[i + 1].children[0].children[1].children[2].children[0].children[7].innerHTML.toString(); // the next package hour
+                    }
+                    else { // type == "hotelName"
+                        x = rows[i].children[0].children[1].children[0].innerHTML.split("<span")[0].toString(); // this hotel name
+                        y = rows[i + 1].children[0].children[1].children[0].innerHTML.split("<span")[0].toString(); // the next hotel name
+                    }
+
+                    if (dir == "asc") {
+                        if (x.toLowerCase() > y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.toLowerCase() < y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function submitForm(id) {
+            document.getElementById("selectedPack").value = id;
+            document.getElementById("myForm").submit();
+        }
+
+        function initMap() {
+            var uluru = { lat:@Model.latitude , lng:@Model.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.apiKey&callback=initMap">
+    </script>
+</body>
+</html>

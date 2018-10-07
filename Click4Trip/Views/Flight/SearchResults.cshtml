@@ -1,0 +1,296 @@
+﻿@model Click4Trip.ViewModel.FlightSearchResultsVM
+
+@{
+    ViewBag.Title = "Search Results";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/SearchResults.css" />
+    <title>Search Results</title>
+</head>
+
+<body>
+    <div class="container" id="myContainer" style="background-image: url('https://i.imgur.com/Y1iAoaq.png');">
+        <div style="background-color: rgba(0, 0, 0, 0.5); margin-left:auto; margin-right:auto; margin-top:30px; width:82%; padding-left:20px; padding-top:20px; padding-bottom:20px; padding-right:20px;">
+            <div style="color:white; font-weight:bold; font-size:28px;">@Model.originCountry, @Model.originCity &nbsp;&nbsp; <i class="fas fa-long-arrow-alt-right"></i> &nbsp;&nbsp; @Model.destinationCountry, @Model.destinationCity &nbsp;&nbsp;&nbsp;&nbsp; ,@Model.departureDate</div>
+            <br />
+            <div style="color:white; font-weight:bold; font-size:28px;">@Model.destinationCountry, @Model.destinationCity &nbsp;&nbsp; <i class="fas fa-long-arrow-alt-right"></i> &nbsp;&nbsp; @Model.originCountry, @Model.originCity &nbsp;&nbsp;&nbsp;&nbsp; ,@Model.returnDate</div>
+            @*<div style="color:white; font-weight:bold; font-size:20px;">@Model.departureDate - @Model.returnDate</div>*@
+        </div>
+    </div>
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+
+    @if (Model.airline.Count == 0)
+    {
+        <h3>No results!</h3>
+    }
+    else
+    {
+        <div class="row">
+            <div class="l-sidebar col-md-3 col-md-right-0 col-md-right-0 padd-large-left margin-0-bottom" data-mcs-theme="wide">
+                <div style="height:28px;"></div>
+                <div class="text-center" style="background-color:white;">
+                    <br />
+                    <div id="map" style="height: 250px; width: 90%; margin:auto;"></div>
+                    <br /><br />
+                    <label>Sort by Price:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTableNum('asc')">Low-High</button>
+                        <button class="button" onclick="sortTableNum('desc')" style="margin-left:25px;">High-Low</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Outbound Hour:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTable('outbound','asc')">Soon-Later</button>
+                        <button class="button" onclick="sortTable('outbound','desc')" style="margin-left:25px;">Later-Soon</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Inbound Hour:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTable('inbound','asc')">Soon-Later</button>
+                        <button class="button" onclick="sortTable('inbound','desc')" style="margin-left:25px;">Later-Soon</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Price Range:</label>
+                    
+                    @{
+                        double min = Model.price.First();
+                        double max = min;
+                        foreach (double s in Model.price)
+                        {
+                            if (s < min)
+                            {
+                                min = s;
+                            }
+                            if (s > max)
+                            {
+                                max = s;
+                            }
+                        }
+                    }
+
+                    <div id="slidecontainer" style="padding-left:15px; padding-right:15px;">
+                        <input type="range" min="@min" max="@max" value="@max" class="slider" id="myRange" onchange="filterTable()">
+                        <p style="font-size:small; margin-top:-10px;"><span style="float:left;"> @min </span> <span id="demo" style="float:right;"></span></p>
+                        <br />
+                    </div>
+                </div>
+            </div>
+
+            <div id="flightsResultSection" class="col-md-9">
+                <div style="color:black; font-size:14px; font-weight:500; padding-bottom:8px;"> @Model.airline.Count Results Were Found</div>
+                @for (int i = 0; i < Model.airline.Count; ++i)
+                {
+                    <div class="flightBoxParent">
+                        <div class="flightBox">
+                            <div style="margin-left:10px; margin-right:10px; font-size:20px; color:black;"> <i class="fab fa-avianex"></i> @Model.airline[i] Airline </div>
+                            <div style="display: grid; grid-template-columns: 45% 45% 10%; position: relative;">
+                                <div style="grid-column: 1; grid-row: 1;">
+                                    <br />
+                                    <div style="margin-left:10px; margin-right:10px; font-size:16px; color:black;"> Outbound: @Model.originCity <i class="fas fa-long-arrow-alt-right"></i> @Model.destinationCity </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Direct Flight </div>
+                                    <br />
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Departure: &nbsp;&nbsp; @Model.outbound[i].DepartureTime, @Model.outbound[i].DepartureDay </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Arrival: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.outbound[i].ArrivalTime, @Model.outbound[i].ArrivalDay </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Total: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.outbound[i].TimeDuration Hrs. </div>
+
+                                    <div style="display:none;">@Model.outbound[i].DepartureTime</div>
+                                </div>
+
+                                <div style="grid-column: 2; grid-row: 1;">
+                                    <br />
+                                    <div style="margin-left:10px; margin-right:10px; font-size:16px; color:black;"> Inbound: @Model.destinationCity <i class="fas fa-long-arrow-alt-right"></i> @Model.originCity </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Direct Flight </div>
+                                    <br />
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Departure: &nbsp;&nbsp; @Model.inbound[i].DepartureTime, @Model.inbound[i].DepartureDay </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Arrival: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.inbound[i].ArrivalTime, @Model.inbound[i].ArrivalDay </div>
+                                    <div style="margin-left:10px; margin-right:10px; font-size:14px;"> Total: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.inbound[i].TimeDuration Hrs. </div>
+                                    
+                                    <div style="display:none;">@Model.inbound[i].DepartureTime</div>
+                                </div>
+                                <div style="grid-column: 3; grid-row: 1;">
+                                    <div style="font-size:18px; color:black; float:right; bottom:44%; right:3.5%; position:absolute; padding-right: 5px;">$@Model.price[i] </div>
+
+                                    <button class="myButton" id="button@(i)" onclick="submitForm(@i)">Order</button>
+                                    <small style="font-size:8px; color:dimgrey; position:absolute; bottom:2%; right:4.5%;">price per adult</small>
+                                </div>
+                            </div>
+
+                        </div>
+                        <br /><br />
+                    </div>
+                }
+            </div>
+        </div>
+
+        using (Html.BeginForm("ViewFlightInfo", "Flight", FormMethod.Post, new { id = "myForm" }))
+        {
+            <div style="display:none">
+                @for (int i = 0; i < Model.price.Count; i++)
+                {
+                    @Html.HiddenFor(x => x.outbound[i].ArrivalAirportCode, new { value = Model.outbound[i].ArrivalAirportCode })
+                    @Html.HiddenFor(x => x.outbound[i].ArrivalDate, new { value = Model.outbound[i].ArrivalDate })
+                    @Html.HiddenFor(x => x.outbound[i].ArrivalTime, new { value = Model.outbound[i].ArrivalTime })
+                    @Html.HiddenFor(x => x.outbound[i].DepartureAirportCode, new { value = Model.outbound[i].DepartureAirportCode })
+                    @Html.HiddenFor(x => x.outbound[i].DepartureDate, new { value = Model.outbound[i].DepartureDate })
+                    @Html.HiddenFor(x => x.outbound[i].DepartureTime, new { value = Model.outbound[i].DepartureTime })
+                    @Html.HiddenFor(x => x.outbound[i].FlightNumber, new { value = Model.outbound[i].FlightNumber })
+                    @Html.HiddenFor(x => x.outbound[i].DepartureDay, new { value = Model.outbound[i].DepartureDay })
+                    @Html.HiddenFor(x => x.outbound[i].ArrivalDay, new { value = Model.outbound[i].ArrivalDay })
+                    @Html.HiddenFor(x => x.outbound[i].DepartureAirportName, new { value = Model.outbound[i].DepartureAirportName })
+                    @Html.HiddenFor(x => x.outbound[i].ArrivalAirportName, new { value = Model.outbound[i].ArrivalAirportName })
+
+                    @Html.HiddenFor(x => x.inbound[i].ArrivalAirportCode, new { value = Model.inbound[i].ArrivalAirportCode })
+                    @Html.HiddenFor(x => x.inbound[i].ArrivalDate, new { value = Model.inbound[i].ArrivalDate })
+                    @Html.HiddenFor(x => x.inbound[i].ArrivalTime, new { value = Model.inbound[i].ArrivalTime })
+                    @Html.HiddenFor(x => x.inbound[i].DepartureAirportCode, new { value = Model.inbound[i].DepartureAirportCode })
+                    @Html.HiddenFor(x => x.inbound[i].DepartureDate, new { value = Model.inbound[i].DepartureDate })
+                    @Html.HiddenFor(x => x.inbound[i].DepartureTime, new { value = Model.inbound[i].DepartureTime })
+                    @Html.HiddenFor(x => x.inbound[i].FlightNumber, new { value = Model.inbound[i].FlightNumber })
+                    @Html.HiddenFor(x => x.inbound[i].DepartureDay, new { value = Model.inbound[i].DepartureDay })
+                    @Html.HiddenFor(x => x.inbound[i].ArrivalDay, new { value = Model.inbound[i].ArrivalDay })
+                    @Html.HiddenFor(x => x.inbound[i].DepartureAirportName, new { value = Model.inbound[i].DepartureAirportName })
+                    @Html.HiddenFor(x => x.inbound[i].ArrivalAirportName, new { value = Model.inbound[i].ArrivalAirportName })
+
+                    @Html.HiddenFor(x => x.seatsRemaining[i], new { value = Model.seatsRemaining[i] })
+                    @Html.HiddenFor(x => x.airline[i], new { value = Model.airline[i] })
+                    @Html.HiddenFor(x => x.price[i], new { value = Model.price[i] })
+                }
+                @Html.HiddenFor(x => x.selectedFlight, new { id = "selectedFlight" })
+                @Html.HiddenFor(x => x.departureDate, new { value = Model.departureDate })
+                @Html.HiddenFor(x => x.returnDate, new { value = Model.returnDate })
+                @Html.HiddenFor(x => x.originCountry, new { value = Model.originCountry })
+                @Html.HiddenFor(x => x.originCity, new { value = Model.originCity })
+                @Html.HiddenFor(x => x.destinationCountry, new { value = Model.destinationCountry })
+                @Html.HiddenFor(x => x.destinationCity, new { value = Model.destinationCity })
+                @Html.HiddenFor(x => x.originCodeCity, new { value = Model.originCodeCity })
+                @Html.HiddenFor(x => x.destinationCodeCity, new { value = Model.destinationCodeCity })
+            </div>
+        }
+    }
+
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = this.value;
+        }
+
+        function filterTable() {
+            var input, filter, table, flight, price, i;
+            input = document.getElementById("myRange");
+            filter = parseInt(input.value, 10);
+            table = document.getElementById("flightsResultSection");
+            flight = table.getElementsByClassName("flightBoxParent"); // each flight
+            for (i = 0; i < flight.length; i++) { // for each row (flight)
+                price = (flight[i].children[0].children[1].children[2].children[0].innerHTML.toString()).substring(1);
+                if (parseInt(price, 10) <= filter) { // take the price
+                    flight[i].style.display = ""; // show it
+                } else {
+                    flight[i].style.display = "none"; // hide it
+                }
+
+            }
+        }
+
+        function sortTableNum(dir) {
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("flightsResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("flightBoxParent"); // take all the rows (flights)
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;              
+                    x = (rows[i].children[0].children[1].children[2].children[0].innerHTML.toString()).substring(1); // this flight price
+                    y = (rows[i + 1].children[0].children[1].children[2].children[0].innerHTML.toString()).substring(1); // the next flight price                   
+
+                    if (dir == "asc") {
+                        if (parseInt(x, 10) > parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (parseInt(x, 10) < parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function sortTable(type, dir) {
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("flightsResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("flightBoxParent");
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    if (type == "outbound") {
+                        x = rows[i].children[0].children[1].children[0].children[7].innerHTML.toString(); // this flight hour
+                        y = rows[i + 1].children[0].children[1].children[0].children[7].innerHTML.toString(); // the next flight hour
+                    }
+                    else { // type == "inbound"
+                        x = rows[i].children[0].children[1].children[1].children[7].innerHTML.toString(); // this flight hour
+                        y = rows[i + 1].children[0].children[1].children[1].children[7].innerHTML.toString(); // the next flight hour
+                    }
+
+                    if (dir == "asc") {
+                        if (x.toLowerCase() > y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.toLowerCase() < y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function submitForm(id) {
+            document.getElementById("selectedFlight").value = id;
+            document.getElementById("myForm").submit();
+        }
+
+        function initMap() {
+            var uluru = { lat:@Model.latitude , lng:@Model.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.apiKey&callback=initMap">
+    </script>
+</body>
+</html>

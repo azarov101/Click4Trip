@@ -1,0 +1,278 @@
+﻿@model Click4Trip.ViewModel.CarInfoVM
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/ViewFlight.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+</head>
+
+<body>
+    <div class="row" id="div1" style="height:50px;">
+        <div style="margin-left:auto; margin-right:auto; padding-top:10px;">
+            <p style="padding-left:20px; padding-right:20px; font: bold 20px/30px Georgia, serif;">
+                @Model.destCity, @Model.destCountry
+            </p>
+        </div>
+    </div>
+    <br />
+    <div class="row" id="div2">
+        <div class="myContainer11" style="height:120px; grid-template-columns: 28% 2% 50% 20%;" @*style="border: 2px solid black;"*@>
+            <div style="grid-column: 1; padding-left:20px; padding-top:10px;">
+                <img src="@Model.car.car.image_url" style="width:70%; margin-left:20px;" />
+            </div>
+            <div style="grid-column: 2; margin-bottom:20px; margin-top:15px; border-left: 1px dashed #333;">
+            </div>
+            <div style="grid-column: 3; padding-left:20px; padding-top:10px; line-height:1;">
+                <p id="carClass"></p>
+                <p id="carType"></p>
+                <p id="carTrans"></p>
+                <p id="carAirCond"></p>
+            </div>
+            <div style="grid-column: 4; font: italic bold 28px/30px Georgia, serif; margin-left:auto; margin-right:auto; padding-top:38px; padding-bottom:38px;">
+                $@Model.car.car.estimated_total_amount
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row" id="div3">
+        <div class="myContainer11" style="height:300px; grid-template-columns: 50% 50%; position:relative;" @*style="border: 2px solid black;"*@>
+            <div style="grid-column: 1; padding-left:20px; padding-top:10px;">
+                <p>
+                    <span style="font-weight:bold; font-size:18px">Supplier Company </span><br />
+                    <span style="font-size:12px;">@Model.car.provider</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold; font-size:18px">Pickup Location </span><br />
+                    <span style="font-size:12px;">@Model.car.address</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold; font-size:18px">Pickup Time</span><br />
+                    <span style="font-size:12px;">@Model.pickUpDate, 12AM</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold; font-size:18px">Dropoff Location </span><br />
+                    <span style="font-size:12px;">@Model.car.address</span>
+                </p>
+                <p>
+                    <span style="font-weight:bold; font-size:18px">Dropoff Time </span><br />
+                    <span style="font-size:12px;">@Model.dropOffDate, 12AM</span>
+                </p>
+            </div>
+
+            <div style="grid-column: 2; margin-left:auto; margin-right:auto;">
+                <div id="map" style="height: 290px; width: 48%; position:absolute; margin-left:-220px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    @using (Html.BeginForm("SubmitCar", "CarRent", FormMethod.Post, new { id = "myForm" }))
+    {
+        @Html.HiddenFor(x => x.pickUpDate, new { value = Model.pickUpDate })
+        @Html.HiddenFor(x => x.dropOffDate, new { value = Model.dropOffDate })
+        @Html.HiddenFor(x => x.destCountry, new { value = Model.destCountry })
+        @*@Html.HiddenFor(x => x.destCity, new { value = Model.destCity })*@
+        @Html.HiddenFor(x => x.days, new { value = Model.days })
+        @Html.HiddenFor(x => x.car.address, new { value = Model.car.address })
+        @Html.HiddenFor(x => x.car.provider, new { value = Model.car.provider })
+        @Html.HiddenFor(x => x.car.car.estimated_total_amount, new { value = Model.car.car.estimated_total_amount })
+        @Html.HiddenFor(x => x.car.car.acriss_code, new { value = Model.car.car.acriss_code })
+        <div class="row" style="width: 75%; margin: auto;">
+            <button id="submitButton" class="blockButton2" type="submit"><span>Continue to Payment</span></button>
+        </div>
+    }
+
+    <script>
+        InitView();
+        //document.getElementById("submitButton").click();
+
+        function InitView() {
+            document.getElementById("carClass").innerHTML = '<i class="fa fa-check-square-o" style="font-size:16px;color:green"></i> <b>Category:</b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ConvertAcrissCode(0);
+            document.getElementById("carType").innerHTML = '<i class="fa fa-check-square-o" style="font-size:16px;color:green"></i> <b>Type:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ConvertAcrissCode(1);
+            document.getElementById("carTrans").innerHTML = '<i class="fa fa-check-square-o" style="font-size:16px;color:green"></i> <b>Transmission/Drive:</b> &nbsp;&nbsp;&nbsp;' + ConvertAcrissCode(2);
+            document.getElementById("carAirCond").innerHTML = '<i class="fa fa-check-square-o" style="font-size:16px;color:green"></i> <b>Fuel/Air Condition:</b> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;' + ConvertAcrissCode(3);
+        }
+
+        function ConvertAcrissCode(index) {
+            if (index == 0) {
+                switch ("@Model.car.car.acriss_code".charAt(index)) {
+                    case "M":
+                        return "Mini";
+                    case "N":
+                        return "Mini Elite";
+                    case "E":
+                        return "Economy";
+                    case "H":
+                        return "Economy Elite";
+                    case "C":
+                        return "Compact";
+                    case "D":
+                        return "Compact Elite";
+                    case "I":
+                        return "Intermediate";
+                    case "J":
+                        return "Intermediate Elite";
+                    case "S":
+                        return "Standard";
+                    case "R":
+                        return "Standard Elite";
+                    case "F":
+                        return "Fullsize";
+                    case "G":
+                        return "Fullsize Elite";
+                    case "P":
+                        return "Premium";
+                    case "U":
+                        return "Premium Elite";
+                    case "L":
+                        return "Luxury";
+                    case "W":
+                        return "Luxury Elite";
+                    case "O":
+                        return "Oversize";
+                    case "X":
+                        return "Special";
+                    default: return "Unspecified";
+                }
+            }
+            else if (index == 1) {
+                switch ("@Model.car.car.acriss_code".charAt(index)) {
+                    case "B":
+                        return "2-Door";
+                    case "D":
+                        return "4-Door";
+                    case "C":
+                        return "2/4-Door Car";
+                    case "W":
+                        return "Wagon/Estate";
+                    case "V":
+                        return "Van (passenger)";
+                    case "L":
+                        return "Limousine";
+                    case "S":
+                        return "Sport";
+                    case "T":
+                        return "Convertible";
+                    case "F":
+                        return "4-Wheel Drive (SUV)";
+                    case "P":
+                        return "Pick Up";
+                    case "J":
+                        return "All Terrain";
+                    case "K":
+                        return "Commercial Van/Truck";
+                    case "X":
+                        return "Special";
+                    case "R":
+                        return "Recreational";
+                    case "Q":
+                        return "Pick up Extended Car";
+                    case "Z":
+                        return "Special Offer Car";
+                    case "E":
+                        return "Coupe";
+                    case "M":
+                        return "Monospace";
+                    case "H":
+                        return "Motor Home";
+                    case "Y":
+                        return "2 Wheel Vehicle";
+                    case "N":
+                        return "Roadster";
+                    case "G":
+                        return "Crossover";
+                    default: return "Unspecified";
+                }
+            }
+            else if (index == 2) {
+                switch ("@Model.car.car.acriss_code".charAt(index)) {
+                    case "A":
+                        return "Auto Unspecified Drive";
+                    case "M":
+                        return "Manual Unspecified Drive";
+                    case "N":
+                        return "Manual 4WD";
+                    case "C":
+                        return "Manual AWD";
+                    case "B":
+                        return "Auto 4WD";
+                    case "D":
+                        return "Auto AWD";
+                    default: return "Unspecified";
+                }
+            }
+            else if (index == 3) {
+                switch ("@Model.car.car.acriss_code".charAt(index)) {
+                    case "R":
+                        return "Unspecified Fuel/Power With Air";
+                    case "N":
+                        return "Unspecified Fuel/Power Without Air";
+                    case "D":
+                        return "Diesel Air";
+                    case "Q":
+                        return "Diesel No Air";
+                    case "H":
+                        return "Hybrid Air";
+                    case "I":
+                        return "Hybrid No Air";
+                    case "E":
+                        return "Electric Air";
+                    case "C":
+                        return "Electric No Air";
+                    case "L":
+                        return "LPG/Compressed Gas Air";
+                    case "S":
+                        return "LPG/Compressed Gas No Air";
+                    case "A":
+                        return "Hydrogen Air";
+                    case "B":
+                        return "Hydrogen No Air";
+                    case "M":
+                        return "Multi Fuel/Power Air";
+                    case "F":
+                        return "Multi fuel/power No Air";
+                    case "V":
+                        return "Petrol Air";
+                    case "Z":
+                        return "Petrol No Air";
+                    case "U":
+                        return "Ethanol Air";
+                    case "X":
+                        return "Ethanol No Air";
+                    default: return "Unspecified";
+                }
+            }
+        }
+
+
+        function initMap() {
+            var uluru = { lat:@Model.car.latitude , lng:@Model.car.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.apiKey&callback=initMap">
+    </script>
+</body>
+</html>

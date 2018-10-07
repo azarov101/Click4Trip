@@ -1,0 +1,241 @@
+﻿@model Click4Trip.ViewModel.HotelCheckoutVM
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/HotelCheckout.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+@{
+    ViewBag.Title = "HotelCheckout";
+}
+<body>
+    <div class="myRow">
+        <div class="col-75">
+            <div class="myContainer">
+                @using (Html.BeginForm("SubmitOrder", "Hotel", FormMethod.Post, new { id = "myForm" }))
+                {
+                    <div class="myRow">
+                        <div class="col-50">
+                            <h3>Customer Information</h3>
+                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                            @Html.TextBoxFor(x => x.customerName, new { type = "text", id = "fname", placeholder = "John M. Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                            @Html.TextBoxFor(x => x.email, new { type = "email", id = "email", placeholder = "john@example.com", required = "required", maxlength = "50", title = "Email is required" })
+
+                            <label for="address"><i class="fas fa-address-card"></i> Address</label>
+                            @Html.TextBoxFor(x => x.address, new { type = "text", id = "address", placeholder = "167 Hayarkon Street, Tel Aviv, Israel", required = "required", maxlength = "500", title = "Address is required" })
+
+                            <label for="phone"><i class="fas fa-phone-square"></i> Phone Number</label>
+                            @Html.TextBoxFor(x => x.phone, new { type = "text", id = "phone", placeholder = "+972-520123456", pattern = "^\\+[0-9]{3}\\-[0-9]{9}$", required = "required", title = "Phone is required" })
+                        </div>
+
+                        <div class="col-50">
+                            <h3>Payment</h3>
+
+                            <label for="cname">Name on Card</label>
+                            @Html.TextBoxFor(x => x.cardName, new { type = "text", id = "cname", placeholder = "John More Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="cid">ID on Card</label>
+                            @Html.TextBoxFor(x => x.id, new { type = "text", id = "cid", placeholder = "123456789", required = "required", pattern = "^[0-9]{9}$", title = "ID is required" })
+
+                            <label for="ccnum">Credit card number</label>
+                            @Html.TextBoxFor(x => x.creditCard, new { type = "text", id = "ccnum", placeholder = "1234", required = "required", title = "Credit Card is required" })
+
+                            <div class="myRow">
+                                <div class="col-50">
+                                    <label for="expdate">Exp Date</label>
+                                    @Html.TextBoxFor(x => x.cardExpDate, new { type = "text", id = "expdate", placeholder = "05/19", required = "required", pattern = "^(([0][1-9])|([1][0-2]))\\/(18|19|20|21|22)$", title = "Exp Date is required" })
+                                </div>
+                                <div class="col-50">
+                                    <label for="cvv">CVV</label>
+                                    @Html.TextBoxFor(x => x.cardCvv, new { type = "text", id = "cvv", placeholder = "352", required = "required", pattern = "^[0-9]{3}$", title = "CVV is required" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    @Html.HiddenFor(x => x.room[0].roomComposition, new { @value = Model.room[0].roomComposition })
+                    @Html.HiddenFor(x => x.room[0].roomDescription, new { @value = Model.room[0].roomDescription })
+                    @Html.HiddenFor(x => x.room[0].roomPrice, new { @value = Model.room[0].roomPrice })
+
+                    @Html.HiddenFor(x => x.room[1].roomComposition, new { @value = Model.room[1].roomComposition })
+                    @Html.HiddenFor(x => x.room[1].roomDescription, new { @value = Model.room[1].roomDescription })
+                    @Html.HiddenFor(x => x.room[1].roomPrice, new { @value = Model.room[1].roomPrice })
+
+                    @Html.HiddenFor(x => x.room[2].roomComposition, new { @value = Model.room[2].roomComposition })
+                    @Html.HiddenFor(x => x.room[2].roomDescription, new { @value = Model.room[2].roomDescription })
+                    @Html.HiddenFor(x => x.room[2].roomPrice, new { @value = Model.room[2].roomPrice })
+                    @Html.HiddenFor(x => x.destination, new { @value = Model.destination })
+                    @Html.HiddenFor(x => x.location, new { id = "locationapi" })
+
+
+                    <div class="text-danger" id="errorMessage"> @TempData["error"] </div>
+                    <div>@Html.ValidationSummary(false, "", new { @class = "text-danger" })</div>
+
+                    <button type="submit" class="myButton">Continue to checkout</button>
+                }
+                
+            </div>
+        </div>
+        <script>
+            $.ajax({
+                url: "https://geoip-db.com/jsonp",
+                jsonpCallback: "callback",
+                dataType: "jsonp",
+                success: function (location) {
+                    $("#locationapi").val(location.country_name);
+                }
+            });      
+        </script>
+
+
+        <div class="col-25">
+            <div class="myContainer">
+                <h4>Order Details <span class="price" style="color:black"><b>@Model.numberOfRooms </b><i class="fas fa-bed"></i></span></h4>
+                <div class="roomDetails">
+                    <p><b>Hotel Name: </b>@Model.hotelName</p>
+                    <p><b>From: </b>@Model.startDate</p>
+                    <p><b>To: </b>@Model.endDate</p>
+                </div>
+
+                <button id="room1_button" class="collapsible" onclick="growDiv(1)">Room 1</button>
+                <div id="room1">
+                    <div class="measuringWrapper">
+                        <div id="content_room1" class="roomDetails"></div>
+                    </div>
+                </div>
+                <br />
+                <button id="room2_button" class="collapsible" onclick="growDiv(2)">Room 2</button>
+                <div id="room2">
+                    <div class="measuringWrapper">
+                        <div id="content_room2" class="roomDetails"></div>
+                    </div>
+                </div>
+                <br />
+                <button id="room3_button" class="collapsible" onclick="growDiv(3)">Room 3</button>
+                <div id="room3">
+                    <div class="measuringWrapper">
+                        <div id="content_room3" class="roomDetails"></div>
+                    </div>
+                </div>
+                <hr>
+                <p>Total <span id="totalFee" class="price" style="color:black; font-weight:bold;"></span></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        if ("@TempData["error"]" == "") {
+            document.getElementById("errorMessage").style.display = "none";
+        }
+        else {
+            document.getElementById("errorMessage").style.display = "normal";
+        }
+        var numberOfRooms = @Model.numberOfRooms;
+        InitView();
+
+        function growDiv(number) { // function for the style of the order details (total fee)
+            var growDiv = document.getElementById('room' + number);
+            if (growDiv.clientHeight) {
+                growDiv.style.height = 0;
+            } else {
+                var wrapper = document.querySelector('.measuringWrapper');
+                growDiv.style.height = wrapper.clientHeight + "px";
+            }
+        }
+
+        function InitView() {
+            if (numberOfRooms == 1) {
+                document.getElementById("room2_button").style.display = "none";
+                document.getElementById("room3_button").style.display = "none";
+            }
+            else if (numberOfRooms == 2) {
+                document.getElementById("room3_button").style.display = "none";
+                document.getElementById("content_room2").innerHTML = "<b>Room Type: </b>@Model.room[1].roomDescription" + "<br />" + "<b>Room Composition: </b>@Model.room[1].roomComposition" + "<br />" + "<b>Price Per Adult: </b>@Model.room[1].roomPrice$";
+            }
+            else if (numberOfRooms == 3) {
+                document.getElementById("content_room2").innerHTML = "<b>Room Type: </b>@Model.room[1].roomDescription" + "<br />" + "<b>Room Composition: </b>@Model.room[1].roomComposition" + "<br />" + "<b>Price Per Adult: </b>@Model.room[1].roomPrice$";
+                document.getElementById("content_room3").innerHTML = "<b>Room Type: </b>@Model.room[2].roomDescription" + "<br />" + "<b>Room Composition: </b>@Model.room[2].roomComposition" + "<br />" + "<b>Price Per Adult: </b>@Model.room[2].roomPrice$";
+            }
+            document.getElementById("content_room1").innerHTML = "<b>Room Type: </b>@Model.room[0].roomDescription" + "<br />" + "<b>Room Composition: </b>@Model.room[0].roomComposition" + "<br />" + "<b>Price Per Adult: </b>@Model.room[0].roomPrice$";
+
+            CalculateTotalFee();
+            AddDataBeforeSubmit("startDate", "@Model.startDate");
+            AddDataBeforeSubmit("endDate", "@Model.endDate");
+            AddDataBeforeSubmit("hotelName", "@Model.hotelName");
+            AddDataBeforeSubmit("hotelAddress", "@Model.hotelAddress");
+            AddDataBeforeSubmit("numberOfRooms", "@Model.numberOfRooms");
+            AddDataBeforeSubmit("totalFee", document.getElementById("totalFee").innerHTML);
+        }
+
+        function CalculateTotalFee() {
+            var priceForAdult = 1;
+            var priceForChild = 0.65;
+            var roomCompositionList = ["@Model.room[0].roomComposition", "@Model.room[1].roomComposition", "@Model.room[2].roomComposition"];
+            var roomPriceList = ["@Model.room[0].roomPrice", "@Model.room[1].roomPrice", "@Model.room[2].roomPrice"];
+            var totalFee = [0,0,0];
+  
+            for (var i = 0; i < @Model.numberOfRooms; ++i) {
+                switch (roomCompositionList[i]) {
+                    case "Couple":
+                        totalFee[i] = roomPriceList[i] * (2 * priceForAdult);
+                        break;
+                    case "Single":
+                        totalFee[i] = roomPriceList[i] * priceForAdult;
+                        break;
+                    case "Adult + Child":
+                        totalFee[i] = roomPriceList[i] * (priceForAdult + priceForChild);
+                        break;
+                    case "Adult + 2 Children":
+                        totalFee[i] = roomPriceList[i] * (priceForAdult + 2 * priceForChild);
+                        break;
+                    case "Adult + 3 Children":
+                        totalFee[i] = roomPriceList[i] * (priceForAdult + 3 * priceForChild);
+                        break;
+                    case "Couple + Child":
+                        totalFee[i] = roomPriceList[i] * (2 * priceForAdult + priceForChild);
+                        break;
+                    case "Couple + 2 Children":
+                        totalFee[i] = roomPriceList[i] * (2 * priceForAdult + 2 * priceForChild);
+                        break;
+                    case "Couple + 3 Children":
+                        totalFee[i] = roomPriceList[i] * (2 * priceForAdult + 3 * priceForChild);
+                        break;
+                    case "Three Adults":
+                        totalFee[i] = roomPriceList[i] * (3 * priceForAdult);
+                        break;
+                    default:
+                        totalFee[i] = 0;
+                        break;
+                }
+            }
+            
+            var total = totalFee[0] + totalFee[1] + totalFee[2];
+            document.getElementById("totalFee").innerHTML = "$" + total.toFixed(2);
+        }
+        
+        function AddDataBeforeSubmit(name, value) {
+            var form = document.getElementById("myForm");
+            var saveRoomInformation = document.createElement('input');
+            saveRoomInformation.setAttribute("type", "hidden");
+            saveRoomInformation.setAttribute("name", name);
+            saveRoomInformation.setAttribute("value", value);
+            form.appendChild(saveRoomInformation);
+        }
+            
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+﻿@model Click4Trip.ViewModel.ViewFlightOrderVM
+@{
+    ViewBag.Title = "ViewFlightOrderReceipt";
+}
+
+<div class="container" id="maincontainer">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="invoice-title">
+                <h2>Invoice</h2><h3 class="pull-right" style="font-weight: bold;">Order # @Model.invoice</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Billed To:</strong><br>
+                        @Model.customerName<br>
+                        @Model.customerId<br>
+                        @Model.email
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Order Date:</strong><br>
+                        @Model.orderDate<br><br>
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Payment Method:</strong><br>
+                        Credit card ending ****@Model.creditCardNumber<br>
+                        @Model.email
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Status:</strong><br>
+                        @if (@Model.status == 0)
+                        {
+                            <span style="color:dimgrey;">Waiting</span>
+                        }
+                        else if (@Model.status == 1)
+                        {
+                            <span style="color:forestgreen;">Confirmed</span>
+                        }
+                        else
+                        {
+                            <span style="color:firebrick;">Declined</span>
+                        }
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Order summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td class="text-center"><strong>Flight Information</strong></td>
+                                    <td class="text-center"><strong>Flight Numbers</strong></td>
+                                    <td class="text-center"><strong>Composition</strong></td>
+                                    <td class="text-center"><strong>Pricing</strong></td>
+                                    <td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                <tr>
+                                    <td class="text-center">
+                                        <p>
+                                            Departure @Model.DetartureLocation @Model.DetartureDate @Model.Airline
+                                            <br />
+                                            Departure @Model.ArrivalLocation @Model.ReturnDate @Model.Airline
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        Outbound @Model.outbound
+                                        <br />
+                                        Inbound @Model.inbound
+                                    </td>
+
+                                    <td class="text-center">
+                                        @Model.NumBabies x Babies <br />
+                                        @Model.NumChild x Children <br />
+                                        @Model.NumYoung x Youngsters <br />
+                                        @Model.NumAdult x Adults <br />
+                                        @Model.NumPensioner x Pensioners <br />
+                                    </td>
+
+                                    <td class="text-center">
+                                        @Model.PriceBabies USD <br />
+                                        @Model.PriceChild USD <br />
+                                        @Model.PriceYoung USD <br />
+                                        @Model.PriceAdult USD <br />
+                                        @Model.PricePensioner USD <br />
+                                    </td>
+
+                                    <td class="text-right" id="totalInTable" style="font-weight: bold;">@Model.totalPrice USD</td>
+                                </tr>
+                                <tr><td><br /></td><td><br /></td><td><br /></td><td><br /></td></tr>
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                    <td class="thick-line text-right" id="subtotal">@Model.totalPrice USD</td>
+                                </tr>
+                                @{ 
+                                        double x = 0.05 * Model.totalPrice;
+                                        double total = Model.totalPrice * 1.05;
+                                    }
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Handling fee</strong></td>
+                                    <td class="no-line text-right" id="fee">@x USD - 5%</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Total</strong></td>
+                                    <td class="no-line text-right" id="total" style="font-weight: bold;">@total USD</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById("totalInTable").innerHTML = (@Model.totalPrice).toFixed(2) + "USD";
+    document.getElementById("subtotal").innerHTML = (@Model.totalPrice).toFixed(2) + "USD";
+    var fee = 0.05 * @Model.totalPrice;
+    document.getElementById("fee").innerHTML = fee.toFixed(2) + "USD";
+    var total = fee + @Model.totalPrice;
+    document.getElementById("total").innerHTML = total.toFixed(2) + "USD";
+</script>
+

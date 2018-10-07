@@ -1,0 +1,177 @@
+﻿@model Click4Trip.ViewModel.HotelOrderVM
+
+<div class="container" id="maincontainer">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="invoice-title">
+                <h2>Invoice</h2><h3 class="pull-right">Order # @Model.order.Invoice</h3>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Billed To:</strong><br>
+                        @Model.order.Name<br>
+                        @Model.order.UserId<br>
+                        @Model.order.Email
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Order Date:</strong><br>
+                        @Model.order.OrderDate<br><br>
+                    </address>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-6">
+                    <address>
+                        <strong>Payment Method:</strong><br>
+                        Visa ending **** @Model.order.CreditCard<br>
+                        @Model.order.Email
+                    </address>
+                </div>
+                <div class="col-xs-6 text-right">
+                    <address>
+                        <strong>Status:</strong><br>
+                        @if (@Model.order.Status == 0)
+                        {
+                            <span style="color:dimgrey;">Waiting</span>
+                        }
+                        else if (@Model.order.Status == 1)
+                        {
+                            <span style="color:forestgreen;">Confirmed</span>
+                        }
+                        else
+                        {
+                            <span style="color:firebrick;">Declined</span>
+                        }
+                    </address>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><strong>Order summary</strong></h3>
+                </div>
+                <div class="panel-body">
+                    <div class="table-responsive">
+                        <table class="table table-condensed">
+                            <thead>
+                                <tr>
+                                    <td><strong>Hotel</strong></td>
+                                    <td class="text-center"><strong>Rooms</strong></td>
+                                    <td class="text-center"><strong>Duration</strong></td>
+                                    <td class="text-center"><strong>Pricing</strong></td>
+                                    <td class="text-right"><strong>Totals</strong></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- foreach ($order->lineItems as $line) or some such thing here -->
+                                <tr>
+                                    <td>@Model.hotel.Name - @Model.hotel.City,@Model.hotel.Country</td>
+                                    <td class="text-center">
+                                        @foreach (Click4Trip.Models.HotelOrderDetails x in Model.hotelOrderDetails)
+                                        {
+                                            <p>
+                                                @x.RoomType (@x.HostingType):
+                                                @if (x.NumOfAdults != 0)
+                                                {
+                                                <div>@x.NumOfAdults Adults</div>
+                                                }
+                                                @if (x.NumOfChilds != 0)
+                                                {
+                                                <div>@x.NumOfAdults Childs</div>
+                                                }
+                                                @if (x.NumOfBabies != 0)
+                                                {
+                                                <div>@x.NumOfAdults Babies</div>
+                                                }
+                                            </p>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <p>
+                                            @Model.hotelOrder.StartDate - @Model.hotelOrder.EndDate
+                                            @{
+                                                double nights = Click4Trip.Tools.ToolsClass.getNumOfNights(Click4Trip.Tools.ToolsClass.getDate(Model.hotelOrder.StartDate),
+                                                                                Click4Trip.Tools.ToolsClass.getDate(Model.hotelOrder.EndDate));
+                                            }
+                                            (@nights Nights)
+                                        </p>
+                                    </td>
+                                    <td class="text-center">
+                                        Price per person:
+                                        <center>Adult- @Model.hotel.AdultPrice ILS</center>
+                                        <center>Child- @Model.hotel.ChildPrice ILS</center>
+                                        <center>Baby- @Model.hotel.BabyPrice ILS</center>
+                                        Extras:
+                                        @foreach (Click4Trip.Models.RoomPrice x in Model.roomPrice)
+                                        {
+                                            <div>@x.RoomType- @x.Price ILS</div>
+                                        }
+                                    </td>
+                                    <td class="text-right">
+                                        @{
+                                            double sum = 0;
+                                            foreach (Click4Trip.Models.HotelOrderDetails x in Model.hotelOrderDetails)
+                                            {
+                                                sum += x.NumOfAdults * Model.hotel.AdultPrice;
+                                                sum += x.NumOfChilds * Model.hotel.ChildPrice;
+                                                sum += x.NumOfBabies * Model.hotel.BabyPrice;
+
+                                                foreach (Click4Trip.Models.RoomPrice r in Model.roomPrice)
+                                                {
+                                                    if (r.RoomType == x.RoomType)
+                                                    {
+                                                        sum += r.Price;
+                                                    }
+                                                }
+                                            }
+                                            sum *= nights;
+                                        }
+                                        @sum ILS
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line"></td>
+                                    <td class="thick-line text-center"><strong>Subtotal</strong></td>
+                                    <td class="thick-line text-right">@sum ILS</td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Handling fee</strong></td>
+                                    <td class="no-line text-right">
+                                        @{
+                                            double fee = 0;
+                                            fee = 0.05 * sum;
+                                        }
+                                        @fee ILS
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="no-line"></td>
+                                    <td class="no-line"></td>
+                                    <td class="no-line text-center"><strong>Total</strong></td>
+                                    <td class="no-line text-right">
+                                        @{ 
+                                            double total = 0;
+                                            total = fee + sum;
+                                        }    
+                                        @total ILS
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

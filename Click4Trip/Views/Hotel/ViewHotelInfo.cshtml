@@ -1,0 +1,552 @@
+﻿@model Click4Trip.ViewModel.HotelOrderDetailsVM
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/ViewHotel.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+@{
+    ViewBag.Title = "ViewHotelInfo";
+}
+<body>
+    <div class="container" style="font-family: Georgia, serif;">
+        <div class="row">
+            <p style="font: bold 22px/30px Georgia, serif;"> Hotel Information</p>
+            <p style="font: bold 18px/30px Georgia, serif;">
+                @Model.hotelName &nbsp;&nbsp;
+                <span style="font: 12px/30px Georgia, serif;">
+                    <span id="star1" class="fa fa-star"></span>
+                    <span id="star2" class="fa fa-star"></span>
+                    <span id="star3" class="fa fa-star"></span>
+                    <span id="star4" class="fa fa-star"></span>
+                    <span id="star5" class="fa fa-star"></span>
+                </span>
+            </p>
+        </div>
+
+        <div @*class="myContainer"*@ class="row" style="display: grid; grid-template-columns: 33.3% 33.3% 33.3%; position: relative;">
+            <div @*class="a"*@ style="grid-column: 1;grid-row: 1; /*margin-left:-13px;*/">
+                <br />
+                <p style="font-size:large;"> Hotel Details: </p>
+                <p style="padding-left:1em; font-size:smaller; font-style:italic;"> @Model.address </p>
+                @for (var i = 0; i < Model.contact.Count; ++i)
+            {
+                <p style="padding-left:1em; font-size:smaller; font-style:italic;">@Model.contact[i]</p>
+        }
+            </div>
+
+            <div @*class="b"*@ style="grid-column: 2/4; grid-row: 1 / 3;">
+                @for (var i = 0; i < @Model.image.Count; ++i)
+            {
+                <div class="mySlides">
+                    <img src="@Model.image[i]" width="800" height="500" style="width:100%">
+                </div>
+        }
+                @if (@Model.image.Count != 0)
+            {
+                <a class="prev" onclick="plusSlides(-1)">❮</a>
+                <a class="next" onclick="plusSlides(1)">❯</a>
+
+                <div class="row" style="margin-right: 15px; margin-top: 10px; grid-column: 1/3; grid-row: 2;">
+                    <div id="carousel">
+
+                        @for (var i = 0; i < @Model.image.Count; ++i)
+                    {
+                        <div class="myColumn">
+                            <img class="demo cursor" src="@Model.image[i]" width="133" height="83" style="width:100%" onclick="currentSlide(@(i+1))">
+                        </div>
+                }
+                    </div>
+                </div>
+        }
+        else
+        {
+            <center style="text-align: center;"><h2>There are no images for this hotel</h2></center>
+        }
+
+            </div>
+
+            <div @*class="c"*@ style="grid-column: 1; grid-row: 2;">
+                <p style="font-size:large;"> Hotel Facilities: </p>
+                @for (var i = 0; i < Model.amenities.Count; ++i)
+            {
+                <p style="padding-left:1em; font-size:smaller;"> <i class="fa fa-check-square-o" style="font-size:16px;color:#00c86e"></i> <span style="font-style:italic;"> @Model.amenities[i]</span></p>
+        }
+            </div>
+        </div>
+
+        <br />
+        <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+        <br />
+        <div class="row" style="height:170px;">
+            <p style="font: bold 22px/30px Georgia, serif;"> Hotel Reviews</p>
+
+            @if (Model.reviews.Count == 0)
+        {
+            <center style="text-align: center;"><p style="font: 22px/30px Georgia, serif;">There are no reviews for this hotel</p></center>
+    }
+    else
+    {
+        <div class="myReview0">
+
+            @for (var i = 0; i < Model.reviews.Count; ++i)
+        {
+            <div class="myReview1" id="rev_@(i+1)" style="box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24); height:115px; width:95%; margin-left:auto; margin-right:auto;">
+                <div class="numbertext">@(i + 1)  / @Model.reviews.Count</div>
+                <div class="e2" style="padding-left: 25px; padding-right: 25px;">
+                    <center><i style="font-size: 36px;" class="fas fa-user-circle"></i></center>
+                    <p class="text-center" style="font-style:italic; color:dimgrey;"> @Model.customersName[@i] </p>
+                    <p class="text-center" style="font-style:italic; font-size:x-small; color:dimgrey;"> @Model.reviews[@i].ReviewDate </p>
+                </div>
+                <div class="d2" style="padding-left: 15px; padding-right: 15px; padding-top: 5px; padding-bottom: 5px;">
+                    <div class="myReview2">
+                        <div class="f">
+                            @if (Model.reviews[@i].ReviewType == 0)
+                        {
+                            <i class="fas fa-thumbs-up" id="like" style="font-size: 86px; display: block; margin-top: auto; margin-bottom: auto;"></i>
+                    }
+                    else
+                    {
+                        <i class="fas fa-thumbs-down" id="dislike" style="font-size: 86px; display: block; margin-top: auto; margin-bottom: auto;"></i>
+                }
+                        </div>
+                        <div class="g">
+                            <p> @Model.reviews[@i].Review</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    }
+            <a id="prevButton" class="round" onclick="reviewShowSlides('prev')" style="left:2.5%;">&#10094;</a>
+            <a id="nextButton" class="round" onclick="reviewShowSlides('next')" style="right:2.5%;">&#10095;</a>
+        </div>
+}
+
+        </div>
+
+        <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+        <br />
+
+        <!-- The Modal -->
+        <div id="myModal" class="modal">
+
+            <!-- Modal content -->
+            <div class="modal-content">
+                <span class="closeModal">&times;</span>
+                <div class="RoomComposition">
+                    <ul class="composition">
+                        <li class="header">Room Composition</li>
+                        <li><input id="rb_1" type="radio" name="optradio" checked="checked">Couple</li>
+                        <li><input id="rb_2" type="radio" name="optradio">Single</li>
+                        <li><input id="rb_3" type="radio" name="optradio">Adult + Child</li>
+                        <li><input id="rb_4" type="radio" name="optradio">Adult + 2 Children</li>
+                        <li><input id="rb_5" type="radio" name="optradio">Adult + 3 Children</li>
+                        <li><input id="rb_6" type="radio" name="optradio">Couple + Child</li>
+                        <li><input id="rb_7" type="radio" name="optradio">Couple + 2 Children</li>
+                        <li><input id="rb_8" type="radio" name="optradio">Couple + 3 Children</li>
+                        <li><input id="rb_9" type="radio" name="optradio">Three Adults</li>
+                        <li class="grey"><button class="ModalButton" onclick="AddRoomComposition()">Add Room</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        @using (Html.BeginForm("SubmitRoomComposition", "Hotel", FormMethod.Post, new { id = "myForm" }))
+    {
+        @Html.HiddenFor(x => x.destination, new { @value = Model.destination })
+}
+        <div class="row">
+            <p style="font: bold 22px/30px Georgia, serif;"> Order Information</p>
+            <br />
+            <div style="display: grid; grid-gap: 4px; grid-template-columns: 30% 65% 5%; position: relative;">
+                <div @*class="e"*@ style="grid-column: 1;">
+                    <p style="font: 14px/30px Georgia, serif; line-height:2.5;">
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-calendar-alt"></i>&nbsp; Start Date:</span> <span>&nbsp;@Model.searchResultsVM.startdDate </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-calendar-alt"></i>&nbsp; End Date:</span> <span>&nbsp;@Model.searchResultsVM.endDate </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-moon"></i>&nbsp; Number of Nights:</span> <span>&nbsp; @Model.searchResultsVM.nights </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="fas fa-bed"></i>&nbsp; Number of Rooms:</span> <span id="orderinfo_numberOfRooms">&nbsp; 1 Room</span>
+                    </p>
+                </div>
+
+                <div id="carouselVertical" @*class="d"*@ style="grid-column: 2; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);">
+                    @for (var i = 0; i < Model.room.Count; ++i)
+                {
+                    <div style="position:relative; padding-top: 10px; padding-bottom: 10px; padding-left: 25px; padding-right: 25px;">
+                        @if (i != 0)
+                    {
+                        <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; margin-top:-10px; padding: 0;" />
+                }
+                        <p style="font-weight: bold;">ROOM @(i + 1):&nbsp;&nbsp; <span id="roomDescription_@i" style="font-weight: lighter; font-style: italic; font-size:smaller;">@Model.room[i].roomDescription</span> </p>
+                        <p id="roomPrice_@i" style="position: absolute; right: 5.5%; font-size:18px; bottom:30%;">@Model.room[i].roomPrice$</p>
+                        <button class="myButton" id="button@(i)" onclick="OpenModal(@i)">Select</button>
+
+                        @for (var j = 0; j < Model.room[i].roomType.Count; ++j)
+                    {
+                        <p style="padding-left:2em; font-size: small;">@Model.room[i].roomType[j]</p>
+                }
+                    </div>
+            }
+                </div>
+            </div>
+        </div>
+
+        <div class="row" style="border:2px solid black; margin-top: 40px; margin-left: 5px; margin-right: 5px; margin-bottom: 10px; padding-left: 25px; padding-right: 25px;">
+            <center><h2>Your Order</h2></center>
+            <label>How many rooms would you like to order? &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </label>
+            <label class="radio-inline">
+                <input type="radio" id="rb_one" checked="checked">One Room
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="rb_two">Two Rooms
+            </label>
+            <label class="radio-inline">
+                <input type="radio" id="rb_three">Three Rooms
+            </label>
+
+            @* <button id="hhh" onclick="AddRoom()">Click me</button> *@
+            <ul id="myUL" style="margin: 0; min-width: 250px; box-sizing: border-box;"></ul>
+            <br />
+            <button id="submitButton" class="blockButton" onclick="submit()"><span>Continue to Payment Page</span></button>
+            <center>
+                <label id="errorMessage" class="text-danger"></label>
+            </center>
+        </div>
+
+        <br />
+        <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+        <br />
+        <div class="row" style="margin-top: 10px; margin-left: 5px; margin-right: 5px; margin-bottom: 10px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);">
+            <div id="map"></div>
+        </div>
+    </div>
+
+    <script>
+        var slideIndex = 1;
+        var currentRoom = -1;
+        showSlides(slideIndex);
+        LoadStars();
+
+        if (@Model.room.Count == 1) {
+            document.getElementById("carouselVertical").style.height = "140px"
+        }
+
+        function LoadStars() {
+            for (var i = 1; i <= @Model.rating; ++i)
+            {
+                document.getElementById("star" + i).classList.add('checked');
+            }
+        }
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("demo");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            if (slides.length != 0) {
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+            }
+        }
+
+        function initMap() {
+            var uluru = { lat:@Model.latitude , lng:@Model.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+
+        CloseButton();
+        // Create a "close" button and append it to each list item
+        function CloseButton() {
+            var myNodelist = document.getElementsByClassName("LI");
+            for (var i = 0; i < myNodelist.length; i++) {
+                if (myNodelist[i].childNodes.length == 1) {
+                    var span = document.createElement("SPAN");
+                    var txt = document.createTextNode("\u00D7");
+                    span.className = "close";
+                    span.appendChild(txt);
+                    myNodelist[i].appendChild(span);
+                    
+                    // Click on a close button to remove the current list item
+                    myNodelist[i].childNodes[1].onclick = function () {
+                        var div = this.parentElement;    
+                        var index = parseInt(div.outerText.substring(1, 2));
+                        div.parentNode.removeChild(div);
+                        RemoveRoomData(index);
+                    }
+                }
+            }
+        }
+
+        function RemoveRoomData(roomNumber) {   
+            var a = document.getElementsByClassName("ROOM_INFO" + roomNumber);
+            var len = a.length;
+            for (var i = 0; i < len; ++i) {
+                var div = a[0];
+                div.parentNode.removeChild(div);
+            }
+        }
+
+        function GetNumberOfNext_li() {
+            var el = document.getElementsByClassName("LI");
+            var count = el.length;
+            if (count == 0) { return 1; }
+            else {
+                for (i = 0; i < count; ++i) {
+                    var temp = "#" + (i + 1);
+                    var roomNumber = el[i].innerHTML.substring(0, 2);
+
+                    if (roomNumber != temp) {
+                        return i + 1;
+                    }
+                }
+                return count + 1;
+            }
+        }
+
+        function AddRoom(composition) {
+            var roomNumber = GetNumberOfNext_li();
+            var room = "#" + roomNumber + ": Room " + (currentRoom + 1) + ":" + "\u00A0 \u00A0" + document.getElementById("roomDescription_" + currentRoom).innerHTML + ",\u00A0 \u00A0 \u00A0 \u00A0 Room Composition: " + composition;
+            var ul = document.getElementById("myUL");
+            var li = document.createElement('li');
+            li.appendChild(document.createTextNode(room));
+            li.classList.add("LI");
+            ul.appendChild(li);
+            CloseButton();
+            SORT(); // sort room list
+        }
+
+        function SORT() {
+            var el = document.getElementsByClassName("LI");
+            var count = el.length;
+            if ((el[count - 1]).innerHTML.substring(1, 2) != count) {
+                for (var i = count - 1; i > 0; --i) {
+                    if ((el[i]).innerHTML.substring(1, 2) < (el[i - 1]).innerHTML.substring(1, 2)) {
+                        el[i].parentNode.insertBefore(el[i], el[i - 1]);
+                    }
+                }
+            }
+        }
+
+        // Get the modal
+        var modal = document.getElementById('myModal');
+
+        // Get the <span> element that closes the modal
+        var span = document.getElementsByClassName("closeModal")[0];
+
+        function OpenModal(buttonNumber) {
+            document.getElementById("errorMessage").innerHTML = "";
+            // check if Maximum amount of rooms was reached in this order
+            if (CheckIfAllRoomsWereSelected()) {
+                window.alert("Maximum amount of rooms was reached in this order!");
+                return;
+            }
+
+            modal.style.display = "block";
+            currentRoom = buttonNumber;
+        }
+        // When the user clicks on <span> (x), close the modal
+        span.onclick = function () {
+            modal.style.display = "none";
+        }
+
+        function AddRoomInformation(checkedRB) {
+            var roomNumber = GetNumberOfNext_li();
+            var form = document.getElementById("myForm");
+            var name = ["roomComposition", "roomType", "roomPrice"];
+            var value = [checkedRB, document.getElementById("roomDescription_" + currentRoom).innerHTML, parseFloat(document.getElementById("roomPrice_" + currentRoom).innerHTML)];
+
+            for (var i = 0; i < 3; ++i) {
+                var saveRoomInformation = document.createElement('input');
+                saveRoomInformation.setAttribute("type", "hidden");
+                saveRoomInformation.setAttribute("name", name[i] + roomNumber);
+                saveRoomInformation.setAttribute("value", value[i]);              
+                saveRoomInformation.classList.add("ROOM_INFO" + roomNumber); // need this to remove more easily
+                form.appendChild(saveRoomInformation);
+            }
+        }
+
+        function AddRoomComposition() {
+            var checkedRB = getCheckedValue();
+            RestartCheckedValue(); // restart for next time
+            modal.style.display = "none"; // close modal       
+            AddRoomInformation(checkedRB); // add information to hidden form (later will pass this to the controller)
+            AddRoom(checkedRB);
+        }
+
+        function RestartCheckedValue() { // unselect all radiobuttons and select the default to be checked
+            var radios = document.getElementsByName("optradio");
+            for (i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    radios[i].checked = false;
+                }
+            }
+            radios[0].checked = true;
+        }
+
+        function getCheckedValue(){ // function to find which of the radiobuttons was selected and return its text
+            var radios = document.getElementsByName("optradio");
+            for (i = 0; i < radios.length; i++) {
+                if (radios[i].checked) {
+                    return document.getElementById(radios[i].id).parentElement.innerText;
+                }
+            }
+            return null;
+        }
+
+        function CheckIfAllRoomsWereSelected() {
+            var numOfRooms = HowManyRooms();
+            var count = document.getElementsByClassName("LI").length;
+            return numOfRooms == count;
+        }
+
+        $(document).ready(function () {
+            $("#rb_one").click(function () {
+                RemoveAllRoomInfo();
+                UncheckRadioButtons(1);
+                document.getElementById("orderinfo_numberOfRooms").innerHTML = " 1 Room"; // update the room composition (in orfer information)
+            });
+            $("#rb_two").click(function () {
+                RemoveAllRoomInfo();
+                UncheckRadioButtons(2);
+                document.getElementById("orderinfo_numberOfRooms").innerHTML = " 2 Rooms"; // update the room composition (in orfer information)
+            });
+            $("#rb_three").click(function () {
+                RemoveAllRoomInfo();
+                UncheckRadioButtons(3);
+                document.getElementById("orderinfo_numberOfRooms").innerHTML = " 3 Rooms"; // update the room composition (in orfer information)
+            });
+        });
+
+        function UncheckRadioButtons(num) {
+            var one = document.getElementById("rb_one");
+            var two = document.getElementById("rb_two");
+            var three = document.getElementById("rb_three");
+
+            for (var i = 1; i <= 3; ++i) {
+                if (i == num) { continue; }
+                else if (i == 1) {
+                    one.checked = false;
+                } else if (i == 2) {
+                    two.checked = false;
+                } else if (i == 3) {
+                    three.checked = false;
+                }
+            }
+        }
+
+        function RemoveAllRoomInfo() {
+            document.getElementById("errorMessage").innerHTML = "";
+            var close = document.getElementsByClassName("close");
+            var len = close.length;
+            for (var i = 0; i < len; i++) {
+                close[0].click();               
+            }
+        }
+        
+        function HowManyRooms() {
+            var one = document.getElementById("rb_one").checked;
+            var two = document.getElementById("rb_two").checked;
+            var three = document.getElementById("rb_three").checked;
+            if (one) { return 1; }
+            else if (two) { return 2; }
+            else { return 3; }
+        }
+
+        function AddDataBeforeSubmit(name, value) {
+            var form = document.getElementById("myForm");
+            var saveRoomInformation = document.createElement('input');
+            saveRoomInformation.setAttribute("type", "hidden");
+            saveRoomInformation.setAttribute("name", name);
+            saveRoomInformation.setAttribute("value", value);
+            form.appendChild(saveRoomInformation);
+        }
+
+        function submit() {         
+            if (!CheckIfAllRoomsWereSelected()) {
+                document.getElementById("errorMessage").innerHTML = "Error: not all rooms were selected and filled.";
+                return;
+            }
+            AddDataBeforeSubmit("numberOfRooms", HowManyRooms()); // add number of rooms
+            AddDataBeforeSubmit("startDate", "@Model.searchResultsVM.startdDate");
+            AddDataBeforeSubmit("endDate", "@Model.searchResultsVM.endDate");
+            AddDataBeforeSubmit("hotelName", "@Model.hotelName");
+            $('form#myForm').submit();
+        }
+
+        /* ------------------------------the review part------------------------------ */
+        var reviewSlideIndex = 1;
+        reviewShowSlides("start");
+
+        function reviewPlusSlides(n) {
+            reviewShowSlides(reviewSlideIndex += n);
+        }
+
+        function reviewCurrentSlide(n) {
+            reviewShowSlides(reviewSlideIndex = n);
+        }
+
+        function reviewShowSlides(n) {
+            if (n == "prev") {
+                if (reviewSlideIndex == 1) {
+                    reviewSlideIndex = @Model.reviews.Count
+                } else {
+                    reviewSlideIndex = reviewSlideIndex - 1;
+                }
+            }
+            else if (n == "next") {
+                if (reviewSlideIndex == @Model.reviews.Count) {
+                    reviewSlideIndex = 1
+                } else {
+                    reviewSlideIndex = reviewSlideIndex + 1;
+                }
+            }
+            var i;
+            var slides = document.getElementsByClassName("myReview1");
+            //if (n > slides.length) { reviewSlideIndex = 1 }
+            //if (n < 1) { reviewSlideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+
+            if (slides.length != 0)
+                slides[reviewSlideIndex - 1].style.display = "grid";
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.apiKey&callback=initMap">
+    </script>
+</body>
+</html>

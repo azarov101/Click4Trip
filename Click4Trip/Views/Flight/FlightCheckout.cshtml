@@ -1,0 +1,197 @@
+﻿@model Click4Trip.ViewModel.FlightCheckoutVM
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/FlightCheckout.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+@{
+    ViewBag.Title = "SubmitFlightComposition";
+}
+
+<body>
+    <div class="myRow">
+        <div class="col-75">
+            <div class="myContainer">
+                @using (Html.BeginForm("SubmitOrder", "Flight", FormMethod.Post, new { id = "myForm" }))
+                {
+                    <div class="myRow">
+                        <div class="col-50">
+                            <h3>Customer Information</h3>
+                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                            @Html.TextBoxFor(x => x.customerName, new { type = "text", id = "fname", placeholder = "John M. Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                            @Html.TextBoxFor(x => x.email, new { type = "email", id = "email", placeholder = "john@example.com", required = "required", maxlength = "50", title = "Email is required" })
+
+                            <label for="address"><i class="fas fa-address-card"></i> Address</label>
+                            @Html.TextBoxFor(x => x.address, new { type = "text", id = "address", placeholder = "167 Hayarkon Street, Tel Aviv, Israel", required = "required", maxlength = "500", title = "Address is required" })
+
+                            <label for="phone"><i class="fas fa-phone-square"></i> Phone Number</label>
+                            @Html.TextBoxFor(x => x.phone, new { type = "text", id = "phone", placeholder = "+972-520123456", pattern = "^\\+[0-9]{3}\\-[0-9]{9}$", required = "required", title = "Phone is required" })
+                        </div>
+
+                        <div class="col-50">
+                            <h3>Payment</h3>
+
+                            <label for="cname">Name on Card</label>
+                            @Html.TextBoxFor(x => x.cardName, new { type = "text", id = "cname", placeholder = "John More Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="cid">ID on Card</label>
+                            @Html.TextBoxFor(x => x.id, new { type = "text", id = "cid", placeholder = "123456789", required = "required", pattern = "^[0-9]{9}$", title = "ID is required" })
+
+                            <label for="ccnum">Credit card number</label>
+                            @Html.TextBoxFor(x => x.creditCard, new { type = "text", id = "ccnum", placeholder = "1234", required = "required", title = "Credit Card is required" })
+
+                            <div class="myRow">
+                                <div class="col-50">
+                                    <label for="expdate">Exp Date</label>
+                                    @Html.TextBoxFor(x => x.cardExpDate, new { type = "text", id = "expdate", placeholder = "05/19", required = "required", pattern = "^(([0][1-9])|([1][0-2]))\\/(18|19|20|21|22)$", title = "Exp Date is required" })
+                                </div>
+                                <div class="col-50">
+                                    <label for="cvv">CVV</label>
+                                    @Html.TextBoxFor(x => x.cardCvv, new { type = "text", id = "cvv", placeholder = "352", required = "required", title = "CVV is required" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                        @Html.HiddenFor(x => x.destCountry, new { @value = Model.destCountry })
+                        @Html.HiddenFor(x => x.departureFlightNumber, new { @value = Model.departureFlightNumber })
+                        @Html.HiddenFor(x => x.returnFlightNumber, new { @value = Model.returnFlightNumber })
+                        @Html.HiddenFor(x => x.departureDate, new { @value = Model.departureDate })
+                        @Html.HiddenFor(x => x.returnDate, new { @value = Model.returnDate })
+                        @Html.HiddenFor(x => x.departureLocation, new { @value = Model.departureLocation })
+                        @Html.HiddenFor(x => x.returnLocation, new { @value = Model.returnLocation })
+                        @Html.HiddenFor(x => x.numberOfTickets, new { @value = Model.numberOfTickets })
+                        @Html.HiddenFor(x => x.totalFee, new { @value = Model.totalFee })
+                        @Html.HiddenFor(x => x.airline, new { @value = Model.airline })
+
+                        @Html.HiddenFor(x => x.babies, new { @value = Model.babies })
+                        @Html.HiddenFor(x => x.price_babies, new { @value = Model.price_babies })
+                        @Html.HiddenFor(x => x.children, new { @value = Model.children })
+                        @Html.HiddenFor(x => x.price_children, new { @value = Model.price_children })
+                        @Html.HiddenFor(x => x.youngsters, new { @value = Model.youngsters })
+                        @Html.HiddenFor(x => x.price_youngsters, new { @value = Model.price_youngsters })
+                        @Html.HiddenFor(x => x.adults, new { @value = Model.adults })
+                        @Html.HiddenFor(x => x.price_adults, new { @value = Model.price_adults })
+                        @Html.HiddenFor(x => x.pensioners, new { @value = Model.pensioners })
+                        @Html.HiddenFor(x => x.price_pensioners, new { @value = Model.price_pensioners })
+                        @Html.HiddenFor(x => x.location, new { id = "locationapi" })
+
+
+                    <div class="text-danger" id="errorMessage"> @TempData["error"] </div>
+
+                    <div>@Html.ValidationSummary(false, "", new { @class = "text-danger" })</div>
+
+
+                    <button type="submit" class="myButton">Continue to checkout</button>
+                }
+            </div>
+        </div>
+        <script>
+            $.ajax({
+                url: "https://geoip-db.com/jsonp",
+                jsonpCallback: "callback",
+                dataType: "jsonp",
+                success: function (location) {
+                    $("#locationapi").val(location.country_name);
+                }
+            });      
+        </script>
+
+
+        <div class="col-25">
+            <div class="myContainer">
+                <h4>Order Details <span class="price" style="color:black"><b>@Model.numberOfTickets </b><i class="fas fa-users"></i></span></h4>
+                <div class="ticketDetails">
+                    <p><b>Round-trip Flight</b></p>
+                    <p><b><i class="fab fa-avianex"></i> @Model.airline Airline </b></p>
+                    <br />
+                    <div style="line-height:1; font-size:smaller;">
+                        <p><b>Outbound: </b>@Model.departureLocation - @Model.returnLocation</p>
+                        <p><b>Date: </b>@Model.departureDate</p>
+                        <p><b>Flight number: </b>#@Model.departureFlightNumber</p>
+
+                        <br />
+                        <p><b>Inbound: </b>@Model.returnLocation - @Model.departureLocation</p>
+                        <p><b>Date: </b>@Model.returnDate</p>
+                        <p><b>Flight number: </b>#@Model.returnFlightNumber</p>
+                    </div>
+                </div>
+
+                <hr style="margin-top:-10px;">
+                @for (int i = 0; i < Model.numberOfTickets; ++i)
+                {
+                    <button id="ticket@(i+1)_button" class="collapsible" onclick="growDiv(@(i+1))">Ticket @(i + 1)</button>
+                    <div id="ticket@(i+1)">
+                        <div class="measuringWrapper">
+                            <div id="content_ticket@(i+1)" class="ticketDetails"></div>
+                        </div>
+                    </div>
+                }
+                
+                <hr>
+
+                <p>Total <span id="totalFee" class="price" style="color:black; font-weight:bold;">$@Model.totalFee</span></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        if ("@TempData["error"]" == "") {
+            document.getElementById("errorMessage").style.display = "none";
+        }
+        else {
+            document.getElementById("errorMessage").style.display = "normal";
+        }
+
+        InitView();
+
+        function growDiv(number) { // function for the style of the order details (total fee)
+            var growDiv = document.getElementById('ticket' + number);
+            if (growDiv.clientHeight) {
+                growDiv.style.height = 0;
+            } else {
+                var wrapper = document.querySelector('.measuringWrapper');
+                growDiv.style.height = wrapper.clientHeight + "px";
+            }
+        }
+
+        function InitView() {
+
+            for (var i = 0; i <@Model.numberOfTickets; ++i) {
+                for (var j = 0; j < @Model.babies; ++j, ++i) {
+                    document.getElementById("content_ticket" + (i + 1)).innerHTML = '<span style="float: left">Ticket for baby</span>  <span style="float: right">@Model.price_babies$</span><br />';
+                }
+                for (var j = 0; j < @Model.children; ++j, ++i) {
+                    document.getElementById("content_ticket" + (i + 1)).innerHTML = '<span style="float: left">Ticket for child</span>  <span style="float: right">@Model.price_children$</span><br />';
+                }
+                for (var j = 0; j < @Model.youngsters; ++j, ++i) {
+                    document.getElementById("content_ticket" + (i + 1)).innerHTML = '<span style="float: left">Ticket for youngster</span>  <span style="float: right">@Model.price_youngsters$</span><br />';
+                }
+                for (var j = 0; j < @Model.adults; ++j, ++i) {
+                    document.getElementById("content_ticket" + (i + 1)).innerHTML = '<span style="float: left">Ticket for adult</span>  <span style="float: right">@Model.price_adults$</span><br />';
+                }
+                for (var j = 0; j < @Model.pensioners; ++j, ++i) {
+                    document.getElementById("content_ticket" + (i + 1)).innerHTML = '<span style="float: left">Ticket for pensioner</span>  <span style="float: right">@Model.price_pensioners$</span><br />';
+                }
+            }
+        }
+
+    </script>
+</body>
+</html>
+

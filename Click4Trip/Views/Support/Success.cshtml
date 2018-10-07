@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Support";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support</title>
+    <link rel="stylesheet" href="~/CSS/writereview.css">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+
+</head>
+
+<body>
+    <div class="writereview-screen">
+        <center>
+            <br />
+            <h3>Support ticket submitted successfully!</h3>
+            <br />
+            <h4>Our agents will take care of it in no time</h4>
+        </center>
+    </div>
+    <script>
+        var varTimerInMiliseconds = 4000;
+        setTimeout(function () {
+            window.location.href = '@Url.Action("NewIndex", "Home")';
+        }, varTimerInMiliseconds);
+    </script>
+</body>
+</html>

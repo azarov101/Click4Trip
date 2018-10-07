@@ -1,0 +1,328 @@
+﻿@model Click4Trip.ViewModel.OrderConfirmVM
+
+@{
+    ViewBag.Title = "Order Confirmation";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation</title>
+    <style>
+        body {
+            background-color: #0072C6;
+            padding: 50px;
+            line-height: 1.25;
+        }
+
+        .OrderConf {
+            margin: 20px auto;
+            margin-bottom: 60px;
+            margin-top: 60px;
+            width: 100%;
+        }
+
+        .screen {
+            background-color: #FFF;
+            padding: 20px;
+        }
+        /* Style the tab */
+        div .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+        }
+
+            /* Style the buttons inside the tab */
+            div.tab button {
+                background-color: inherit;
+                float: left;
+                border: none;
+                outline: none;
+                cursor: pointer;
+                padding: 14px 16px;
+                transition: 0.3s;
+                font-size: 17px;
+            }
+
+                /* Change background color of buttons on hover */
+                div.tab button:hover {
+                    background-color: #ddd;
+                }
+
+                /* Create an active/current tablink class */
+                div.tab button.active {
+                    background-color: #ccc;
+                }
+
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 6px 12px;
+            -webkit-animation: fadeEffect 1s;
+            animation: fadeEffect 1s;
+        }
+
+        /* Fade in tabs */
+        @@webkit-keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @@keyframes fadeEffect {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .button {
+            outline: 0;
+            background: #0072C6;
+            width: 30%;
+            border: 0;
+            padding: 10px;
+            color: #FFFFFF;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .buttonSC {
+            background-color: #4CAF50;
+            width: 10%;
+            font-size: 16px;
+        }
+
+        .buttonWR {
+            background-color: #FF0000;
+            width: 10%;
+            font-size: 16px;
+        }
+
+        #tableMain {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            #tableMain caption {
+                font-size: 1.5em;
+                margin: .5em 0 .75em;
+            }
+
+            #tableMain .trForTable {
+                background: #f2f2f2;
+                border: 1px solid #ddd;
+                padding: .35em;
+            }
+
+            #tableMain .thForTable,
+            #tableMain .tdForTable {
+                padding: .625em;
+                text-align: center;
+                font-size: 20px;
+            }
+
+            #tableMain .thForTable {
+                font-size: 1em;
+                letter-spacing: .1em;
+                font-weight: 600;
+            }
+
+        ul {
+            list-style-type: none;
+        }
+
+        #maincontainer {
+            width: 100%;
+        }
+
+        .invoice-title h2, .invoice-title h3 {
+            display: inline-block;
+        }
+
+        .table > tbody > tr > .no-line {
+            border-top: none;
+        }
+
+        .table > thead > tr > .no-line {
+            border-bottom: none;
+        }
+
+        .table > tbody > tr > .thick-line {
+            border-top: 2px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="OrderConf">
+        <div class="screen">
+            <h2>Order Confirmation</h2>
+            <h4>Please select the type of order and then press the button that represents the action you would like to apply to each order.</h4>
+            <br />
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Hotel')">Hotel</button>
+                <button class="tablinks" onclick="openTab(event, 'Flight')">Flight</button>
+                <button class="tablinks" onclick="openTab(event, 'Package')">Package</button>
+                <button class="tablinks" onclick="openTab(event, 'CarRent')">Car Rent</button>
+            </div>
+            <div id="Hotel" class="tabcontent">
+
+                @if (Model.hotelOrderVM.Count == 0)
+                {
+                    <h3>There are no hotel orders currently</h3>
+                }
+                else
+                {
+                    <br />
+                    <table id="tableMain">
+                        <tr class="trForTable">
+                            <th class="thForTable">Order Details</th>
+                        </tr>
+                        @foreach (Click4Trip.ViewModel.ViewHotelOrderVM hovm in Model.hotelOrderVM)
+                        {
+                            <tr class="trForTable">
+                                <td class="tdForTable" id="@hovm.invoice">
+                                    @Html.Partial("ViewHotelOrderReceipt", hovm)
+                                    <br />
+                                    <button onclick="confirm(@hovm.invoice)" class="button buttonSC">Accept</button>
+                                    <button onclick="decline(@hovm.invoice)" class="button buttonWR">Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+
+            </div>
+
+            <div id="Flight" class="tabcontent">
+                @if (Model.flightOrderVM.Count == 0)
+                {
+                    <h3>There are no flights orders currently</h3>
+                }
+                else
+                {
+                    <br />
+                    <table id="tableMain">
+                        <tr class="trForTable">
+                            <th class="thForTable">Order Details</th>
+                        </tr>
+                        @foreach (Click4Trip.ViewModel.ViewFlightOrderVM hovm in Model.flightOrderVM)
+                        {
+                            <tr class="trForTable">
+                                <td class="tdForTable" id="@hovm.invoice">
+                                    @Html.Partial("ViewFlightOrderReceipt", hovm)
+                                    <br />
+                                    <button onclick="confirm(@hovm.invoice)" class="button buttonSC">Accept</button>
+                                    <button onclick="decline(@hovm.invoice)" class="button buttonWR">Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+
+            <div id="Package" class="tabcontent">
+                @if (Model.packageOrderVM.Count == 0)
+                {
+                    <h3>There are no packages orders currently</h3>
+                }
+                else
+                {
+                    <br />
+                    <table id="tableMain">
+                        <tr class="trForTable">
+                            <th class="thForTable">Order Details</th>
+                        </tr>
+                        @foreach (Click4Trip.ViewModel.ViewPackageOrderVM hovm in Model.packageOrderVM)
+                        {
+                            <tr class="trForTable">
+                                <td class="tdForTable" id="@hovm.invoice">
+                                    @Html.Partial("ViewPackageOrderReceipt", hovm)
+                                    <br />
+                                    <button onclick="confirm(@hovm.invoice)" class="button buttonSC">Accept</button>
+                                    <button onclick="decline(@hovm.invoice)" class="button buttonWR">Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+
+            <div id="CarRent" class="tabcontent">
+                @if (Model.carRentOrderVM.Count == 0)
+                {
+                    <h3>There are no car rent orders currently</h3>
+                }
+                else
+                {
+                    <br />
+                    <table id="tableMain">
+                        <tr class="trForTable">
+                            <th class="thForTable">Order Details</th>
+                        </tr>
+                        @foreach (Click4Trip.ViewModel.ViewCarRentVM hovm in Model.carRentOrderVM)
+                        {
+                            <tr class="trForTable">
+                                <td class="tdForTable" id="@hovm.invoice">
+                                    @Html.Partial("ViewCarRentOrderReceipt", hovm)
+                                    <br />
+                                    <button onclick="confirm(@hovm.invoice)" class="button buttonSC">Accept</button>
+                                    <button onclick="decline(@hovm.invoice)" class="button buttonWR">Decline</button>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </div>
+
+        </div>
+    </div>
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        function confirm(id) {
+            removeRow(id);
+            $.get("ConfirmHotelOrderByJSON", { id }, null);
+        }
+
+        function decline(id) {
+            removeRow(id);
+            $.get("DeclineHotelOrderByJSON", { id }, null);
+            removeRow(id);
+        }
+
+        function removeRow(id) {
+            var x = "#" + id;
+            $(x).closest("tr").fadeTo(400, 0, function () {
+                $(x).closest("tr").remove();
+            });
+        }
+    </script>
+</body>
+</html>

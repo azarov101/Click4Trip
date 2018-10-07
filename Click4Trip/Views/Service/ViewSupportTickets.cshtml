@@ -1,0 +1,173 @@
+﻿@model Click4Trip.ViewModel.SupportTicketsVM
+
+@{
+    ViewBag.Title = "ViewSupportTickets";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Support Tickets</title>
+    <style>
+        body {
+            background-color: #0072C6;
+            padding: 50px;
+            line-height: 1.25;
+        }
+
+        .reviewConf {
+            margin: 20px auto;
+            margin-bottom: 25px;
+            margin-top: 25px;
+            width: 100%;
+        }
+
+        .screen {
+            background-color: #FFF;
+            padding: 20px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+
+        .button {
+            outline: 0;
+            background: #0072C6;
+            width: 30%;
+            border: 0;
+            padding: 10px;
+            color: #FFFFFF;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            table-layout: fixed;
+        }
+
+            table caption {
+                font-size: 1.5em;
+                margin: .5em 0 .75em;
+            }
+
+            table tr {
+                background: #f2f2f2;
+                border: 1px solid #ddd;
+                padding: .35em;
+            }
+
+            table th,
+            table td {
+                padding: .625em;
+                text-align: center;
+            }
+
+            table th {
+                font-size: 1em;
+                letter-spacing: .1em;
+                font-weight: 600;
+            }
+
+        .buttonSC {
+            background-color: #4CAF50;
+        }
+
+        .buttonWR {
+            background-color: #FF0000;
+        }
+           
+    </style>
+</head>
+
+<body>
+    <div class="reviewConf">
+        <div class="screen">
+            <center><h2>Open customers support tickets</h2></center>
+            <br />
+            <center>
+                @if (Model.qstList.Count == 0)
+                {
+                    <h4>There are no open customers support tickets currently.</h4>
+                }
+                else
+                {
+                    <table>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Invoice</th>
+                            <th>Action requested</th>
+                            <th>✓</th>
+                        </tr>
+                        @foreach (Click4Trip.Models.QuickSupportTicket s in Model.qstList)
+                        {
+                            <tr>
+                                <td>@s.Note</td>
+                                <td>@s.InvoiceId</td>
+                                <td>@s.SupportType</td>
+                                <td id="@s.ID"><button onclick="confirm1(@s.ID)" class="button buttonWR">Close</button></td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </center>
+        </div>
+    </div>
+    <br /><br /><br />
+    <div class="reviewConf">
+        <div class="screen">
+            <center><h2>Open support tickets</h2></center>
+            <br />
+            <center>
+                @if (Model.stList.Count == 0)
+                {
+                    <h4>There are no open support tickets currently.</h4>
+                }
+                else
+                {
+                    <table>
+                        <tr>
+                            <th>Ticket</th>
+                            <th>Contact</th>
+                            <th>✓</th>
+                        </tr>
+                        @foreach (Click4Trip.Models.SupportTicket s in Model.stList)
+                        {
+                            <tr>
+                                <td>@s.Note</td>
+                                <td>
+                                    <div>@s.FullName</div>
+                                    <div>@s.PhoneNumber</div>
+                                </td>
+                                <td id="@s.ID"><button onclick="confirm(@s.ID)" class="button buttonWR">Close</button></td>
+                            </tr>
+                        }
+                    </table>
+                }
+            </center>
+        </div>
+    </div>
+    <script>
+        function confirm(id) {
+            removeRow(id);
+            $.get("CloseByJSON", { id }, null);
+        }
+
+        function confirm1(id) {
+            removeRow(id);
+            $.get("CloseByJSONQ", { id }, null);
+        }
+
+        function removeRow(id) {
+            var x = "#" + id;
+            $(x).closest("tr").fadeTo(400, 0, function () {
+                $(x).closest("tr").remove();
+            });
+        }
+    </script>
+</body>
+</html>
+</html>

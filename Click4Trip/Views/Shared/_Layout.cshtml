@@ -1,0 +1,190 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Click4Trip- @ViewBag.Title</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="icon" href="~/img/logo_color_hCW_icon.ico" type="image/x-icon" />
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    @*<link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />*@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <style>
+        .dropbtn {
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .space {
+            font-size: 16px;
+            padding-left: 25px;
+            padding-right: 25px;
+        }
+
+        #myDropdown {
+            display: none;
+            position: absolute;
+            right: 13%;
+            bottom: -240%;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        #connectedAdminDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            bottom: -110%;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+        #connectedSMDropdown {
+            display: none;
+            position: absolute;
+            right: 0;
+            bottom: -245%;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            overflow: auto;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 5;
+        }
+
+            #connectedAdminDropdown a, #connectedSMDropdown a, #myDropdown a {
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+            }
+
+        .dropdown div a:hover {
+            background-color: #ddd
+        }
+
+
+        .show {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container body-content" style="margin-top:-40px;">
+        <div class="site-title">
+            <div style="display:grid; grid-template-columns: 50% 50%; position: relative;">
+                <div style="grid-column:1;">
+                    <a href="/Home/NewIndex">
+                        <img src="~/img/Logo-Color.png" alt="" style="width:10%; height:100%;" />
+                    </a>
+                </div>
+
+                <div class="dropdown" style="grid-column:2; padding-top:15px;">
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        if (Click4Trip.Models.User.getUserRole() == 1)
+                        {
+                            <div id="connectedUser" onclick="myFunction('connectedAdminDropdown')" class="dropbtn" aria-haspopup="true" aria-expanded="false" style="float:right; color:#ed4435; font-size:11px; font-weight:bold;"> @Click4Trip.Models.User.getUserName() <span class="caret"></span></div>
+
+                            <div id="connectedAdminDropdown" class="needToClose">
+                                <a href="/Management/Index"> Management </a>
+                                <a href="/Home/Logout"> Logout </a>
+                            </div>
+                        }
+                        else
+                        {
+                            <div id="connectedUser" onclick="myFunction('connectedSMDropdown')" class="dropbtn" aria-haspopup="true" aria-expanded="false" style="float:right; color:#ed4435; font-size:11px; font-weight:bold;"> @Click4Trip.Models.User.getUserName() <span class="caret"></span></div>
+
+                            <div id="connectedSMDropdown" class="needToClose">
+                                <a href="/Service/OrderConfirmation"> Order Confirmation </a>
+                                <a href="/Service/ViewSupportTickets"> View Support Ticket </a>
+                                <a href="/Service/ViewOrder"> View Client Order </a>
+                                <a href="/Home/Logout"> Logout </a>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <span onclick="location.href='/Home/Login'" class="dropbtn" style="float:right; display:inline;  font-size:14px; /*color:#cacbcc;*/"> <i class="fas fa-sign-in-alt"></i> Login </span>
+                    }
+                    @*<span onclick="location.href='/SmartAgent/SmartAgent'" class="dropbtn" style="float:right; display:inline;"><i class="fas fa-user-tie"></i>Smart Agent</span>*@
+                    <span onclick="myFunction('myDropdown')" class="dropbtn" style="float:right; display:inline;  font-size:14px; padding-right:75px;"> Support </span>
+                    <div id="myDropdown" class="needToClose">
+                        <a href="/Hotel/WriteReview"> Write Review on Hotel </a>
+                        <a href="/Support/SupportTicket"> Support Ticket </a>
+                        <a href="/Support/ViewOrder"> View Order </a>
+                        <a href="/Support/ChangeOrder"> Change Order </a>
+                    </div>
+                    <span class="space" style="float:right;"> | </span>
+                    <span onclick="location.href='/SmartAgent/SmartAgent'" class="dropbtn" style="float:right; display:inline; font-size:14px;"><i class="fas fa-user-graduate"></i>  Smart Agent</span>
+
+                    @*<span onclick="location.href='/Hotel/WriteReview'" class="dropbtn" style="cursor:pointer; float:right; display:inline;">Write Review on Hotel</span>*@
+                </div>
+            </div>
+
+            <script>
+                var lastDD = 'myDropdown'; // initialize 
+
+                /* When the user clicks on the button,
+                toggle between hiding and showing the dropdown content */
+                function myFunction(text) {
+                    if (text == "connectedAdminDropdown") {
+                        document.getElementById("connectedAdminDropdown").classList.toggle("show");
+                        lastDD = 'connectedAdminDropdown';
+                    }
+                    else if (text == "connectedSMDropdown") {
+                        document.getElementById("connectedSMDropdown").classList.toggle("show");
+                        lastDD = 'connectedSMDropdown';
+                    }
+                    else if (text == "myDropdown") {
+                        document.getElementById("myDropdown").classList.toggle("show");
+                        lastDD = 'myDropdown';
+                    }
+                }
+
+                // Close the dropdown if the user clicks outside of it
+                window.onclick = function (event) {
+                    if (!event.target.matches('.dropbtn')) {
+                        var dropdowns = document.getElementsByClassName("needToClose");
+                        var i;
+                        for (i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.classList.contains('show')) {
+                                openDropdown.classList.remove('show');
+                            }
+                        }
+                    }
+                    else {
+                        var dropdowns = document.getElementsByClassName("needToClose");
+                        var i;
+                        for (i = 0; i < dropdowns.length; i++) {
+                            var openDropdown = dropdowns[i];
+                            if (openDropdown.classList.contains('show')) {
+                                if (openDropdown.id != lastDD) {
+                                    openDropdown.classList.remove('show');
+                                }
+                            }
+                        }
+                    }
+                }
+            </script>
+            <br />
+        </div>
+        @RenderBody()
+        <hr />
+        <footer>
+            <center><p style="color:black">&copy; @DateTime.Now.Year - By Flowly Team</p></center>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,154 @@
+﻿@model Click4Trip.ViewModel.CarRentCheckoutVM
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/FlightCheckout.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <div class="myRow">
+        <div class="col-75">
+            <div class="myContainer">
+                @using (Html.BeginForm("SubmitOrder", "CarRent", FormMethod.Post, new { id = "myForm" }))
+                {
+                    <div class="myRow">
+                        <div class="col-50">
+                            <h3>Customer Information</h3>
+                            <label for="fname"><i class="fa fa-user"></i> Full Name</label>
+                            @Html.TextBoxFor(x => x.customerName, new { type = "text", id = "fname", placeholder = "John M. Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="email"><i class="fa fa-envelope"></i> Email</label>
+                            @Html.TextBoxFor(x => x.email, new { type = "email", id = "email", placeholder = "john@example.com", required = "required", maxlength = "50", title = "Email is required" })
+
+                            <label for="address"><i class="fas fa-address-card"></i> Address</label>
+                            @Html.TextBoxFor(x => x.customerAddress, new { type = "text", id = "address", placeholder = "167 Hayarkon Street, Tel Aviv, Israel", required = "required", maxlength = "500", title = "Address is required" })
+
+                            <label for="phone"><i class="fas fa-phone-square"></i> Phone Number</label>
+                            @Html.TextBoxFor(x => x.phone, new { type = "text", id = "phone", placeholder = "+972-520123456", pattern = "^\\+[0-9]{3}\\-[0-9]{9}$", required = "required", title = "Phone is required" })
+                        </div>
+
+                        <div class="col-50">
+                            <h3>Payment</h3>
+
+                            <label for="cname">Name on Card</label>
+                            @Html.TextBoxFor(x => x.cardName, new { type = "text", id = "cname", placeholder = "John More Doe", required = "required", maxlength = "50", title = "Name is required" })
+
+                            <label for="cid">ID on Card</label>
+                            @Html.TextBoxFor(x => x.id, new { type = "text", id = "cid", placeholder = "123456789", required = "required", pattern = "^[0-9]{9}$", title = "ID is required" })
+
+                            <label for="ccnum">Credit card number</label>
+                            @Html.TextBoxFor(x => x.creditCard, new { type = "text", id = "ccnum", placeholder = "1234", required = "required", title = "Credit Card is required" })
+
+                            <div class="myRow">
+                                <div class="col-50">
+                                    <label for="expdate">Exp Date</label>
+                                    @Html.TextBoxFor(x => x.cardExpDate, new { type = "text", id = "expdate", placeholder = "05/19", required = "required", pattern = "^(([0][1-9])|([1][0-2]))\\/(18|19|20|21|22)$", title = "Exp Date is required" })
+                                </div>
+                                <div class="col-50">
+                                    <label for="cvv">CVV</label>
+                                    @Html.TextBoxFor(x => x.cardCvv, new { type = "text", id = "cvv", placeholder = "352", required = "required", pattern = "^[0-9]{3}$", title = "CVV is required" })
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    @Html.HiddenFor(x => x.pickUpDate, new { @value = Model.pickUpDate })
+                    @Html.HiddenFor(x => x.dropOffDate, new { @value = Model.dropOffDate })
+                    @Html.HiddenFor(x => x.destCountry, new { @value = Model.destCountry })
+                    @Html.HiddenFor(x => x.days, new { @value = Model.days })
+                    
+                    @Html.HiddenFor(x => x.address, new { id = "hidden_address" })
+
+                    @*@Html.HiddenFor(x => x.address, new { @value = Model.address })*@
+                    @Html.HiddenFor(x => x.provider, new { @value = Model.provider })
+                    @Html.HiddenFor(x => x.price, new { @value = Model.price })
+                    @Html.HiddenFor(x => x.acriss_code, new { @value = Model.acriss_code })
+
+                    <div class="text-danger" id="errorMessage"> @TempData["error"] </div>
+                    <div>@Html.ValidationSummary(false, "", new { @class = "text-danger" })</div>
+
+
+                    <button type="submit" class="myButton">Continue to checkout</button>
+                }
+            </div>
+        </div>
+
+
+
+        <div class="col-25">
+            <div class="myContainer">
+                <h4>Order Details <span class="price" style="color:black"><i class="fas fa-car"></i></span> </h4>
+                <div class="ticketDetails">
+                    <p><b><i class="fas fa-sitemap"></i> Provider: @Model.provider</b></p>
+                    <p><b><i class="fas fa-barcode"></i> Acriss code: @Model.acriss_code</b></p>
+                    <br />
+                    <div style="line-height:1; font-size:smaller;">
+                        <p id="pickupAddress"><b>Pickup: </b>@*@Model.address*@</p>
+                        <p><b>Date: </b>@Model.pickUpDate, 12AM</p>
+
+                        <br />
+                        <p id="dropoffAddress"><b>Dropoff: </b>@*@Model.address*@</p>
+                        <p><b>Date: </b>@Model.dropOffDate, 12AM</p>
+                    </div>
+                </div>
+
+                <hr style="margin-top:-10px;">
+
+                <p>Total <span id="totalFee" class="price" style="color:black; font-weight:bold;">$@Model.price</span></p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        if ("@TempData["error"]" == "") {
+            document.getElementById("errorMessage").style.display = "none";
+        }
+        else {
+            document.getElementById("errorMessage").style.display = "normal";
+        }
+
+        Init();
+
+        function Init() {
+            var words = "@Model.address".split(" ");
+            if (words[words.length - 1].length == 2) {
+                //words.splice(-1, 1);
+                words.pop();
+            }
+            var result = "";
+            for (var i = 0; i < words.length; ++i) {
+                result += FixLetters(words[i]);
+                if (i != words.length - 1) {
+                    result += " ";
+                }
+                else {
+                    result = result.substring(0, result.length - 1);
+                }
+            } 
+
+            document.getElementById("pickupAddress").innerHTML += result;
+            document.getElementById("dropoffAddress").innerHTML += result;
+
+            document.getElementById("hidden_address").value = result; // update the model
+        }
+
+        function FixLetters(word) {
+            return word[0].toUpperCase() + word.substr(1).toLowerCase();
+        }
+    </script>
+</body>
+</html>

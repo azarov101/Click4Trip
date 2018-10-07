@@ -1,0 +1,335 @@
+﻿@model Click4Trip.ViewModel.PackageInfoVM
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/ViewHotel.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+
+<body>
+    <div style="font-family: Georgia, serif;">
+        <h2 style="font-weight:bold;"> Package deal in @Model.flight.destinationCity, @Model.flight.destinationCountry </h2>
+        <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+
+        <div class="container">
+            <div class="row">
+                <p style="font: bold 22px/30px Georgia, serif;"> Hotel Information</p>
+                <p style="font: bold 18px/30px Georgia, serif;">
+                    @Model.hotel.hotelName &nbsp;&nbsp;
+                    <span style="font: 12px/30px Georgia, serif;">
+                        <span id="star1" class="fa fa-star"></span>
+                        <span id="star2" class="fa fa-star"></span>
+                        <span id="star3" class="fa fa-star"></span>
+                        <span id="star4" class="fa fa-star"></span>
+                        <span id="star5" class="fa fa-star"></span>
+                    </span>
+                </p>
+            </div>
+
+            <div @*class="myContainer"*@ class="row" style="display: grid; grid-template-columns: 33.3% 33.3% 33.3%; position: relative;">
+                <div @*class="a"*@ style="grid-column: 1;grid-row: 1; /*margin-left:-13px;*/">
+                    <br />
+                    <p style="font-size:large;"> Hotel Details: </p>
+                    <p style="padding-left:1em; font-size:smaller; font-style:italic;"> @Model.hotel.address </p>
+                    @for (var i = 0; i < Model.hotel.contact.Count; ++i)
+            {
+                <p style="padding-left:1em; font-size:smaller; font-style:italic;">@Model.hotel.contact[i]</p>
+    }
+                </div>
+
+                <div @*class="b"*@ style="grid-column: 2/4; grid-row: 1 / 3;">
+                    @for (var i = 0; i < @Model.hotel.image.Count; ++i)
+            {
+                <div class="mySlides">
+                    <img src="@Model.hotel.image[i]" width="800" height="500" style="width:100%">
+                </div>
+    }
+                    @if (@Model.hotel.image.Count != 0)
+            {
+                <a class="prev" onclick="plusSlides(-1)">❮</a>
+                <a class="next" onclick="plusSlides(1)">❯</a>
+
+                <div class="row" style="margin-right: 15px; margin-top: 10px; grid-column: 1/3; grid-row: 2;">
+                    <div id="carousel">
+
+                        @for (var i = 0; i < @Model.hotel.image.Count; ++i)
+                {
+                    <div class="myColumn">
+                        <img class="demo cursor" src="@Model.hotel.image[i]" width="133" height="83" style="width:100%" onclick="currentSlide(@(i+1))">
+                    </div>
+        }
+                    </div>
+                </div>
+    }
+    else
+    {
+        <center style="text-align: center;"><h2>There are no images for this hotel</h2></center>
+}
+
+                </div>
+
+                <div @*class="c"*@ style="grid-column: 1; grid-row: 2;">
+                    <p style="font-size:large;"> Hotel Facilities: </p>
+                    @for (var i = 0; i < Model.hotel.amenities.Count; ++i)
+            {
+                <p style="padding-left:1em; font-size:smaller;"> <i class="fa fa-check-square-o" style="font-size:16px; color:green;"></i> <span style="font-style:italic;"> @Model.hotel.amenities[i]</span></p>
+    }
+                </div>
+            </div>
+            <br />
+            <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+
+
+            <div class="row" id="div2">
+                <h3 style="font: bold 22px/30px Georgia, serif;"> Flight Information</h3>
+
+                <div @*class="myContainer11"*@ style="height:120px;" @*style="border: 2px solid black;"*@>
+                    <div>
+                        <p style="font: bold 18px/30px Georgia, serif; margin:0;">Flight from <span style="font-style: italic; color:green;">@Model.flight.originCity, @Model.flight.originCountry</span> to <span style="font-style: italic; color:green;">@Model.flight.destinationCity, @Model.flight.destinationCountry</span></p>
+                        <p style="font: 13px/30px Georgia, serif; margin:0; line-height:1.5;">
+                            Regular round-trip flight <br />
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" id="div3" style="height:225px; margin-top:-25px;">
+                <div @*class="c"*@ style="width:98%; margin-left:auto; margin-right:auto; grid-column: 1/2; grid-row: 1; /*border: 2px solid black;*/">
+                    <p style="padding-left:40px; padding-right:40px; font: bold 14px/30px Georgia, serif; background-color:#ececec; color:#585858;">
+                        <i class="fa fa-plane"></i>
+                        @Model.flight.originCity - @Model.flight.destinationCity
+                        <span style="float:right;">
+                            <i class="far fa-clock" style="font-weight:bold;"></i> @Model.flight.timeDuration_outbound Hrs
+                        </span>
+                    </p>
+                </div>
+                <div @*class="myContainer11 gridDevide1"*@ style=" margin-top:10px; height: 40px; display: grid; grid-gap: 4px; position: relative; grid-template-columns: 25% 75%;">
+                    <div style="grid-column: 1; grid-row: 1; font: 14px/30px Georgia, serif; margin:auto; text-align:center; line-height:1; padding-top:10px;">
+                        <p><i class="fab fa-avianex"></i> @Model.flight.airline Airline</p>
+                        <p style="font-size: 11px; font-style:italic; text-align:center; color:#999999;"> Flight #@Model.flight.outbound.FlightNumber </p>
+                    </div>
+                    <div style="grid-column: 2; grid-row: 1; font: 14px/30px Georgia, serif; padding-left: 40px; padding-right:60px;">
+                        <span style="float:left; line-height:1.5; color:#999999; text-align:left; width:33.3%;">
+                            <span style="font-weight:bold; font-size: 18px; color:black;">@Model.flight.outbound.DepartureAirportCode @Model.flight.outbound.DepartureTime</span> <br />
+                            @Model.flight.outbound.DepartureDay, @Model.flight.outbound.DepartureDate <br />
+                            @Model.flight.outbound.DepartureAirportName
+                        </span>
+                        <span style="padding-top:25px; float:left; margin:auto; text-align:center; width:33.3%;"><i class="fas fa-plane" style="font-size:18px; color:#999999;"></i></span>
+                        <span style="float:right; line-height:1.5; color:#999999; text-align:right; width:33.3%;">
+                            <span style="font-weight:bold; font-size: 18px; color:black;">@Model.flight.outbound.ArrivalAirportCode @Model.flight.outbound.ArrivalTime</span> <br />
+                            @Model.flight.outbound.ArrivalDay, @Model.flight.outbound.ArrivalDate <br />
+                            @Model.flight.outbound.ArrivalAirportName
+                        </span>
+                    </div>
+                </div>
+                <br /> <br />
+                <div @*class="c"*@ style="width:98%; margin-left:auto; margin-right:auto; margin-top:-6px;">
+                    <p style="padding-left:40px; padding-right:40px; font: bold 14px/30px Georgia, serif; background-color:#ececec; color:#585858;">
+                        <i class="fa fa-plane"></i>
+                        @Model.flight.destinationCity - @Model.flight.originCity
+                        <span style="float:right;">
+                            <i class="far fa-clock" style="font-weight:bold;"></i> @Model.flight.timeDuration_inbound Hrs
+                        </span>
+                    </p>
+                </div>
+                <div @*class="myContainer11 gridDevide1"*@ style=" margin-top:10px; height: 40px; display: grid; grid-gap: 4px; position: relative; grid-template-columns: 25% 75%;">
+                    <div style="grid-column: 1; grid-row: 1; font: 14px/30px Georgia, serif; margin:auto; text-align:center; line-height:1; padding-top:10px;">
+                        <p><i class="fab fa-avianex"></i> @Model.flight.airline Airline</p>
+                        <p style="font-size: 11px; font-style:italic; text-align:center; color:#999999;"> Flight #@Model.flight.inbound.FlightNumber </p>
+                    </div>
+                    <div style="grid-column: 2; grid-row: 1; font: 14px/30px Georgia, serif; padding-left: 40px; padding-right:60px;">
+                        <span style="float:left; line-height:1.5; color:#999999; text-align:left; width:33.3%;">
+                            <span style="font-weight:bold; font-size: 18px; color:black;">@Model.flight.inbound.DepartureAirportCode @Model.flight.inbound.DepartureTime</span> <br />
+                            @Model.flight.inbound.DepartureDay, @Model.flight.inbound.DepartureDate <br />
+                            @Model.flight.inbound.DepartureAirportName
+                        </span>
+                        <span style="padding-top:25px; float:left; margin:auto; text-align:center; width:33.3%;"><i class="fas fa-plane" style="font-size:18px; color:#999999;"></i></span>
+                        <span style="float:right; line-height:1.5; color:#999999; text-align:right; width:33.3%;">
+                            <span style="font-weight:bold; font-size: 18px; color:black;">@Model.flight.inbound.ArrivalAirportCode @Model.flight.inbound.ArrivalTime</span> <br />
+                            @Model.flight.inbound.ArrivalDay, @Model.flight.inbound.ArrivalDate <br />
+                            @Model.flight.inbound.ArrivalAirportName
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <br />
+            <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+
+            @using (Html.BeginForm("SubmitPackage", "Package", FormMethod.Post, new { id = "myForm" }))
+            {
+                @Html.HiddenFor(x => x.flight.destinationCountry, new { value = Model.flight.destinationCountry })
+
+                @Html.HiddenFor(x => x.composition, new { value = Model.composition })
+                @Html.HiddenFor(x => x.nights, new { value = Model.nights })
+                @Html.HiddenFor(x => x.hotel.hotelName, new { value = Model.hotel.hotelName })
+                @Html.HiddenFor(x => x.hotel.room[0].roomDescription, new { value = Model.hotel.room[0].roomDescription })
+                @Html.HiddenFor(x => x.hotel.numberOfRooms, new { id = "hidden_numberOfRooms" })
+                @Html.HiddenFor(x => x.price, new { id = "hidden_price" })
+
+
+
+                @Html.HiddenFor(x => x.flight.departureDate, new { value = Model.flight.departureDate })
+                @Html.HiddenFor(x => x.flight.returnDate, new { value = Model.flight.returnDate })
+                @Html.HiddenFor(x => x.flight.originCity, new { value = Model.flight.originCity })
+                @Html.HiddenFor(x => x.flight.destinationCity, new { value = Model.flight.destinationCity })
+                @Html.HiddenFor(x => x.flight.airline, new { value = Model.flight.airline })
+                @Html.HiddenFor(x => x.flight.outbound.FlightNumber, new { value = Model.flight.outbound.FlightNumber })
+                @Html.HiddenFor(x => x.flight.inbound.FlightNumber, new { value = Model.flight.inbound.FlightNumber })
+                            
+            }
+
+            <div @*class="myContainer"*@ class="row" style="display: grid; grid-gap: 8px; grid-template-columns: 30% 50% 20%; position: relative;">
+                <div @*class="e"*@ style="grid-column: 1; grid-row: 1;">
+                    <h3 style="font: bold 22px/30px Georgia, serif;"> Order Information</h3>
+                    <br />
+                    <p style="font: 14px/30px Georgia, serif; line-height:2;">
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-calendar-alt"></i>&nbsp; Start Date:</span> <span>&nbsp;@Model.flight.outbound.ArrivalDate </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-calendar-alt"></i>&nbsp; End Date:</span> <span>&nbsp;@Model.flight.inbound.DepartureDate </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-moon"></i>&nbsp; Number of Nights:</span> <span>&nbsp; @Model.nights </span>
+                        <br /> <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="far fa-user-circle"></i>&nbsp; Composition:</span> <span>&nbsp;@Model.composition </span>
+                        <br />
+                        <span style="padding-left:1em; font-weight:bold"> <i class="fas fa-bed"></i>&nbsp; Number of Rooms:</span> <span id="numberOfRooms">&nbsp; 1 Room</span>
+                    </p>
+                </div>
+
+                <div @*class="d"*@ style="grid-column: 2; grid-row: 1; padding-left: 25px; padding-right: 25px;">
+                    <br /><br /> <br /> <br />
+                        
+                    <p style="font: bold 18px/30px Georgia, serif;">Room Description: </p>
+                    <p id="roomDescription_1" style="font-weight: lighter; font-style: italic; font-size:smaller;">@Model.hotel.room[0].roomDescription</p>
+                    <br />
+                    @for (var j = 0; j < Model.hotel.room[0].roomType.Count; ++j)
+                    {
+                        <p style="font-size: small;">@Model.hotel.room[0].roomType[j]</p>
+                    }
+                </div>
+
+                <div style="grid-column: 3; grid-row: 1; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24); margin-top:15px; margin-bottom: 15px; margin-left:-20px; margin-right:20px;">
+                    <center>
+                        <h3>Your Order</h3>
+                        <br />
+                        <label>Number of rooms</label>
+                        <br />
+                        <select id="roomSelection" onchange="UpdatePrice()">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                        </select>
+                        <p style="line-height:0.1;"><br /><br /></p>
+                        <p id="totalPayment" style="font-size:28px;"></p>
+                        <button class="myButton" onclick="submit()" style="right:26%; bottom:40%;">Order</button>
+                    </center>
+
+                </div>
+            </div>
+            <hr style="display: block; height: 1px; border: 0; border-top: 1px solid #ccc; margin: 1em 0; padding: 0;" />
+            <br />
+            <div class="row" style="margin-top: 10px; margin-left: 5px; margin-right: 5px; margin-bottom: 10px; box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var slideIndex = 1;
+        var currentRoom = -1;
+        showSlides(slideIndex);
+        LoadStars();
+
+        function LoadStars() {
+            for (var i = 1; i <= @Model.hotel.rating; ++i)
+            {
+                document.getElementById("star" + i).classList.add('checked');
+            }
+        }
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function currentSlide(n) {
+            showSlides(slideIndex = n);
+        }
+
+        function showSlides(n) {
+            var i;
+            var slides = document.getElementsByClassName("mySlides");
+            var dots = document.getElementsByClassName("demo");
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (i = 0; i < dots.length; i++) {
+                dots[i].className = dots[i].className.replace(" active", "");
+            }
+            if (slides.length != 0) {
+                slides[slideIndex - 1].style.display = "block";
+                dots[slideIndex - 1].className += " active";
+            }
+        }
+
+        function initMap() {
+            var uluru = { lat:@Model.hotel.latitude , lng:@Model.hotel.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 13,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+
+        document.getElementById("totalPayment").innerHTML = "$" + (@Model.price).toFixed(2);
+        var numberOfRooms = 1; 
+        var totalPrice = (@Model.price).toFixed(2);
+
+        function UpdatePrice() {
+            var val = document.getElementById("roomSelection").value;
+            if (val == "1") {
+                totalPrice = (@Model.price).toFixed(2);
+                document.getElementById("totalPayment").innerHTML = "$" + totalPrice;
+                numberOfRooms = 1;
+                document.getElementById("numberOfRooms").innerHTML = " 1 Room"; // update the room composition (in orfer information)
+            }
+            else if (val == "2") {
+                totalPrice = (@Model.price + @Model.hotel.room[0].roomPrice).toFixed(2);
+                document.getElementById("totalPayment").innerHTML = "$" + totalPrice;
+                numberOfRooms = 2;
+                document.getElementById("numberOfRooms").innerHTML = " 2 Rooms"; // update the room composition (in orfer information)
+            }
+            else if (val == "3") {
+                totalPrice = (@Model.price + 2 *@Model.hotel.room[0].roomPrice).toFixed(2);
+                document.getElementById("totalPayment").innerHTML = "$" + totalPrice;
+                numberOfRooms = 3;
+                document.getElementById("numberOfRooms").innerHTML = " 3 Rooms"; // update the room composition (in orfer information)
+            }
+        }
+
+        function submit() {           
+            document.getElementById("hidden_numberOfRooms").value = numberOfRooms;
+            document.getElementById("hidden_price").value = totalPrice;
+            $('form#myForm').submit();
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.hotel.apiKey&callback=initMap">
+    </script>
+</body>
+</html>
+

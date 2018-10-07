@@ -1,0 +1,161 @@
+﻿
+@{
+    ViewBag.Title = "Management";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.0/Chart.js"></script>
+    <title>Management Index</title>
+    <style>
+        body {
+            background-color: #0072C6;
+            padding: 50px;
+        }
+
+        .main {
+            margin: 20px auto;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            width: 70%;
+        }
+
+        .screen {
+            background-color: #FFF;
+            padding: 20px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+        .ultitle{
+            display:inline;
+            /*padding-right: 1.8em;*/
+            text-decoration: underline;
+        }
+        .manindexul{
+            padding:2%;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="screen">
+            <div id="graph" style="float:right;">
+                <br />
+                <center><h4 style="text-decoration:underline;">Latest Orders Report</h4></center>
+                <canvas id="LineGraph" height="400" width="400"></canvas>
+            </div>
+            <h2>Hello,<br /><b>@Click4Trip.Models.User.getUserName()</b></h2>
+            <h3>What would you like to do?</h3>
+            <br />
+                <h4 class="ultitle">Manage User Information</h4>
+                <ul class="manindexul">
+                    <li>@Html.ActionLink(" Add User", "AddUser", "Management")</li>
+                    <li>@Html.ActionLink(" Delete User", "DeleteUser", "Management")</li>
+                    <li>@Html.ActionLink(" Restore User's Password", "RestorePassword", "Management")</li>
+                </ul>
+                <h4 class="ultitle">Manage Orders</h4>
+                <ul class="manindexul">
+                    <li>@Html.ActionLink(" View Order (Agent)", "ViewOrder", "Service")</li>
+                    <li>@Html.ActionLink(" Order Confirmation", "OrderConfirmation", "Service")</li>
+                    <li>@Html.ActionLink(" Delete Order", "OrderNumber", "Service")</li>
+                </ul>
+                <h4 class="ultitle">Other Services</h4>
+                <ul class="manindexul">
+                    <li>@Html.ActionLink(" View Support Ticket", "ViewSupportTickets", "Service")</li>
+                    @*<li>@Html.ActionLink(" Smart Agent- Delete Cities", "DeleteCities", "Management")</li>*@
+                </ul>
+            </div>
+        </div>
+    <script>
+
+        const CHART = $("#LineGraph");
+        var monthArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]; // initialize month array
+        var monthsString = ["", "", "", "", "", "", "", "", "", "", "", ""];
+        
+        $.ajax({
+            url: '/Management/GetOrdersByJSON',
+            type: "GET",
+            dataType: "JSON",
+            success: BindChart
+        });
+
+
+        function BindChart(orders)
+        {           
+            var today = new Date();
+
+            // fill month string array
+            var nextMonth = today.getMonth() + 1;
+            for (i = 0, j = nextMonth; i < 12; ++i) {
+                var months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+                monthsString[i] = months[j];
+                ++j;
+
+                if (j == 12) {
+                    j = 0; // january is 0!
+                }
+            }
+
+            var tempMonthArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+            var len = Object.keys(orders).length; // get the length of the list
+
+            // fill TEMP month array
+            for (i = 0; i < len; ++i)
+            {
+                var parts = (orders[i].OrderDate).split('.'); // split date
+                var currentDate = new Date(parts[2], parts[1]-1, parts[0]);
+
+                var diffDays = parseInt((today - currentDate) / (1000 * 60 * 60 * 24)) // get the diffrence between the 2 dates (in days)
+
+                if (diffDays <= 365) { // show only last year
+                    tempMonthArray[currentDate.getMonth()] += 1;
+                }
+            }
+
+            // fill month array
+            for (i = 0, j = nextMonth; i < 12; ++i) {
+                monthArray[i] = tempMonthArray[j];
+                ++j;
+
+                if (j == 12) {
+                    j = 0; // january is 0!
+                }
+            }
+
+            // build chart...
+            BuildChart();
+        }
+
+        function BuildChart()
+        {
+            let lineChart = new Chart(CHART, {
+                type: 'line',
+                data: {
+                    labels: monthsString,
+                    datasets: [{
+                        label: '# of Orders',
+                        data: monthArray,/*[12, 19, 3, 5, 2, 3, 7, 9, 15, 4, 1, 7]*/
+                        backgroundColor: [
+                            'rgba(0, 116, 199, 0.5)'
+                        ],
+                        borderColor: [
+                            'rgba(0, 116, 199, 1)'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    scales: {
+                        yAxes: [{
+                            ticks: {
+                                beginAtZero: true
+                            }
+                        }]
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+</html>

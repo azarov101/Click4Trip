@@ -1,0 +1,72 @@
+﻿@model Click4Trip.Models.User
+
+@{
+    ViewBag.Title = "Add User";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.intellisense.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="~/CSS/AddNewUser.css" />
+    <meta name="AddUser" content="width=device-width" />
+    <title>Add User</title>
+</head>
+
+<body>
+    <div class="addnewuser">
+        <div class="addnewuser-screen">
+            <center><h2>Add User</h2></center>
+            @using (Html.BeginForm("SubmitUser", "Management", FormMethod.Post))
+            {
+                <div class="form-group">
+                    <center>@Html.TextBoxFor(x => x.FullName, new { type = "text", @class = "form-control", id = "fn", placeholder = "Full Name", required = "required", maxlength = "50" })</center>
+                    <center>@Html.ValidationMessageFor(x => x.FullName, null, new { @class = "text-danger" })</center>
+                </div>
+                <div class="form-group">
+                    <center>@Html.TextBoxFor(x => x.Email, new { type = "text", @class = "form-control", id = "email", placeholder = "Email", required = "required", maxlength = "40" })</center>
+                    <center>@Html.ValidationMessageFor(x => x.Email, null, new { @class = "text-danger" })</center>
+                </div>
+                <div class="form-group">
+                    <center>@Html.TextBoxFor(x => x.Pass, new { type = "password", @class = "form-control", id = "Pass", placeholder = "Password", required = "required", maxlength = "15" })</center>
+                    <center>@Html.ValidationMessageFor(x => x.Pass, null, new { @class = "text-danger" })</center>
+                </div>
+                <br />
+                <center>
+                    <div class="form-group">
+                        <center><h4>Select a role</h4></center>
+                        <div class="select-style">
+                            <input type="radio" id="r1" name="role" value=2 checked><label for="r1"> Sales man &nbsp;</label>
+                            <input type="radio" id="r2" name="role" value=1><label for="r2"> Manager</label>
+                        </div>
+                    </div>
+                </center>
+                <center>
+                    <div class="form-group">
+                        <label class="text-danger" id="msg1">@ViewData["msg"]</label>
+                        <label class="text-success" id="msg2">@ViewData["msgsc"]</label>
+                        <center><button type="submit" class="addbtn" onclick="deletemsg()">Add</button></center>
+                    </div>
+                </center>
+            }
+        </div>
+    </div>
+    <script>       
+        if ("@ViewData["msgsc"]" == "User added!") {
+            var varTimerInMiliseconds = 3000;
+            setTimeout(function () {
+                window.location.href = '@Url.Action("Index", "Management")';
+            }, varTimerInMiliseconds);
+        }
+
+        function deletemsg() {
+            document.getElementById("msg1").innerHTML = "";
+            document.getElementById("msg2").innerHTML = "";
+        }
+
+    </script>
+</body>
+</html>

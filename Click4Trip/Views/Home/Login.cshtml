@@ -1,0 +1,49 @@
+﻿@model Click4Trip.Models.UserPass
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.intellisense.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <meta name="Login" content="width=device-width" />
+    <link rel="stylesheet" href="~/CSS/login.css" />
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="login">
+        <div class="login-screen">
+            @using (Html.BeginForm("SubmitLogin", "Home", FormMethod.Post))
+            {
+                <div class="login-form">
+                    <div class="control-group">
+                        @Html.TextBoxFor(x => x.Email, new { type = "text", @class = "form-control", id = "email", placeholder = "Email", required = "required", maxlength = "40" })
+                        <div> @Html.ValidationMessageFor(x => x.Email, null, new { @class = "text-danger" })</div>
+                    </div>
+
+                    <div class="control-group">
+                        @Html.TextBoxFor(x => x.Password, new { type = "password", @class = "form-control", id = "Pass", placeholder = "Password", required = "required", maxlength = "15" })
+                        <div> @Html.ValidationMessageFor(x => x.Password, null, new { @class = "text-danger" })</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="text-danger" id="msg">@ViewData["msg"]</label>
+                        <button type="submit" id="loginsubmit" class="loginbtn" name="Pass" onclick="deletemsg()">Login</button>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <script>
+        function deletemsg() {
+            document.getElementById("msg").innerHTML = "";
+        }
+    </script>
+</body>
+</html>

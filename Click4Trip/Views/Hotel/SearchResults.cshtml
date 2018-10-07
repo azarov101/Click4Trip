@@ -1,0 +1,269 @@
+﻿@model Click4Trip.ViewModel.SearchResultsVM
+
+@{
+    ViewBag.Title = "Search Results";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+    <link rel="stylesheet" type="text/css" href="~/CSS/SearchResults.css" />
+    <title>Search Results</title>
+</head>
+
+<body>
+    <div class="container" id="myContainer" style="background-image: url('https://i.imgur.com/XFjEa1h.jpg');">
+        <div style="background-color: rgba(0, 0, 0, 0.5); margin-left:auto; margin-right:auto; margin-top:30px; width:82%; padding-left:20px; padding-top:20px; padding-bottom:20px; padding-right:20px;">
+            <div style="color:white; font-weight:bold; font-size:28px;">@Model.destination</div>
+            <br />
+            <div style="color:white; font-weight:bold; font-size:20px;">@Model.startdDate - @Model.endDate</div>
+            <div style="color:white; font-weight:bold; font-size:20px;">(@Model.nights Nights)</div>
+        </div>
+    </div>
+       
+
+    <br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+    @if (Model.hotelSearchResultsVM.Count == 0)
+    {
+        <h3>No results!</h3>
+    }
+    else
+    {
+        <div class="row">
+            <div class="l-sidebar col-md-3 col-md-right-0 col-md-right-0 padd-large-left margin-0-bottom" data-mcs-theme="wide">
+                <div style="height:28px;"></div>
+                <div class="text-center" style="background-color:white;">
+                    <br />
+                    <div id="map" style="height: 250px; width: 90%; margin:auto;"></div>
+                    <br /><br />
+                    <label>Sort by Name:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTable('asc')">A - Z</button>
+                        <button class="button" onclick="sortTable('desc')" style="margin-left:25px;">Z - A</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Price:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTableNum('price','asc')">Low-High</button>
+                        <button class="button" onclick="sortTableNum('price','desc')" style="margin-left:25px;">High-Low</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Sort by Stars:</label>
+                    <div class="list-inline">
+                        <button class="button" onclick="sortTableNum('rating','asc')">Low-High</button>
+                        <button class="button" onclick="sortTableNum('rating','desc')" style="margin-left:25px;">High-Low</button>
+                    </div>
+                    <br />
+                    <br />
+                    <label>Price Range:</label>
+                    @{
+                        double min = Model.hotelSearchResultsVM[0].hotelPrice;
+                        double max = min;
+                        foreach (Click4Trip.ViewModel.HotelSearchResultsVM s in Model.hotelSearchResultsVM)
+                        {
+                            if (s.hotelPrice < min)
+                            {
+                                min = s.hotelPrice;
+                            }
+                            if (s.hotelPrice > max)
+                            {
+                                max = s.hotelPrice;
+                            }
+                        }
+                    }
+
+                    <div id="slidecontainer" style="padding-left:15px; padding-right:15px;">
+                        <input type="range" min="@min" max="@max" value="@max" class="slider" id="myRange" onchange="filterTable()">
+                        <p style="font-size:small; margin-top:-10px;"><span style="float:left;"> @min </span> <span id="demo" style="float:right;"></span></p>
+                    <br />
+                    </div>
+                </div>
+            </div>
+
+            <div id="hotelsResultSection" class="col-md-9">   
+                <div style="color:black; font-size:14px; font-weight:500; padding-bottom:8px;"> @Model.hotelSearchResultsVM.Count Results Were Found</div>
+                @for (int i = 0; i < Model.hotelSearchResultsVM.Count; ++i)
+                {
+                    <div class="hotelBoxParent">
+
+                        <div class="hotelBox">
+                            <div style="grid-column: 1; grid-row: 1;">
+                                <a><img src="@Model.hotelSearchResultsVM[i].hotelImage" style="width:196px; height:132px; cursor:pointer" onclick="submitForm('@Model.hotelSearchResultsVM[i].hotelLink',@Model.hotelSearchResultsVM[i].rating, @i)" /></a>
+                            </div>
+
+                            <div style="grid-column: 2; grid-row: 1;">
+                                <div style="margin-left:10px; margin-right:10px; font-size:20px; color:black;">
+                                    @Model.hotelSearchResultsVM[i].hotelName &nbsp;
+                                    <span style="display:inline-block; vertical-align:middle; font-size:10px;">
+                                        @for (int j = 0; j < 5; j++)
+                                        {
+                                            if (j < Model.hotelSearchResultsVM[i].rating)
+                                            {
+                                                <span class="fa fa-star checked"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="fa fa-star unchecked"></span>
+                                            }
+                                        }
+                                    </span>
+                                    <span style="display:none;">@Model.hotelSearchResultsVM[i].rating</span>
+                                </div>
+                                <br />
+                                <div style="margin-left:10px; margin-right:10px; font-size:16px;">
+                                    @Model.destination <br />
+                                    @Model.nights Nights
+                                </div>
+                                <div style="font-size:18px; color:black; float:right; bottom:40%; right:4%; position:absolute; padding-right: 5px;">$@Model.hotelSearchResultsVM[i].hotelPrice </div>
+
+                                <button class="myButton" id="button@(i)" onclick="submitForm('@Model.hotelSearchResultsVM[i].hotelLink',@Model.hotelSearchResultsVM[i].rating, @i)">Order</button>
+                                <small style="font-size:8px; color:dimgrey; position:absolute; bottom:4%; right:4.5%;">price per adult</small>
+                            </div>
+                        </div>
+                        <br /><br />
+                    </div>
+                }                 
+            </div>
+        </div>
+
+        using (Html.BeginForm("ViewHotelInfo", "Hotel", FormMethod.Post, new { id = "myForm" }))
+        {
+            <div style="display:none">
+                @Html.HiddenFor(x => x.hotelId, new { id = "hotelid" })
+                @Html.HiddenFor(x => x.hotelRating, new { id = "hotelRating" })
+                @Html.HiddenFor(x => x.selectedHotel, new { id = "selectedHotel" } )
+                @Html.HiddenFor(x => x.originalLink, new { value = Model.originalLink })
+                @Html.HiddenFor(x => x.startdDate, new { value = Model.startdDate })
+                @Html.HiddenFor(x => x.endDate, new { value = Model.endDate })
+                @Html.HiddenFor(x => x.nights, new { value = Model.nights })
+                @Html.HiddenFor(x => x.destination, new { value = Model.destination })
+            </div>
+        }  
+    }
+    <script>
+        var slider = document.getElementById("myRange");
+        var output = document.getElementById("demo");
+        output.innerHTML = slider.value;
+
+        slider.oninput = function () {
+            output.innerHTML = this.value;
+        }
+
+        function filterTable() {
+            var input, filter, table, hotel, price, i;
+            input = document.getElementById("myRange");
+            filter = parseInt(input.value, 10);
+            table = document.getElementById("hotelsResultSection");
+            hotel = table.getElementsByClassName("hotelBoxParent"); // each hotel
+            for (i = 0; i < hotel.length; i++) { // for each row (hotel)
+                price = (hotel[i].children[0].children[1].children[3].innerHTML.toString()).substring(1);
+                debugger
+                if (parseInt(price, 10) <= filter) { // take the price
+                    hotel[i].style.display = ""; // show it
+                } else {
+                    hotel[i].style.display = "none"; // hide it
+                }
+
+            }
+        }
+
+        function sortTableNum(type, dir) { // sort by number (price, stars)
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("hotelsResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("hotelBoxParent"); // take all the rows (hotels)
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    if (type == "price") {
+                        x = (rows[i].children[0].children[1].children[3].innerHTML.toString()).substring(1); // this hotel price
+                        y = (rows[i + 1].children[0].children[1].children[3].innerHTML.toString()).substring(1); // the next hotel price
+                    }
+                    else { // type == "rating"
+                        debugger
+                        x = rows[i].children[0].children[1].children[0].children[1].innerHTML.toString(); // this hotel rating
+                        y = rows[i + 1].children[0].children[1].children[0].children[1].innerHTML.toString(); // the next hotel rating
+                    }
+
+                    if (dir == "asc") {
+                        if (parseInt(x, 10) > parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (parseInt(x, 10) < parseInt(y, 10)) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function sortTable(dir) { // sort by string (hotel name)
+            var table, rows, switching, i, x, y, shouldSwitch, switchcount = 0;
+            table = document.getElementById("hotelsResultSection");
+            switching = true;
+            while (switching) {
+                switching = false;
+                rows = table.getElementsByClassName("hotelBoxParent");
+                for (i = 0; i < (rows.length - 1); i++) {
+                    shouldSwitch = false;
+                    debugger
+                    x = rows[i].children[0].children[1].children[0].innerHTML.split("<span")[0].toString(); // this hotel name
+                    y = rows[i + 1].children[0].children[1].children[0].innerHTML.split("<span")[0].toString(); // the next hotel name
+                    if (dir == "asc") {
+                        if (x.toLowerCase() > y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    } else if (dir == "desc") {
+                        if (x.toLowerCase() < y.toLowerCase()) {
+                            shouldSwitch = true;
+                            break;
+                        }
+                    }
+                }
+                if (shouldSwitch) {
+                    rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);
+                    switching = true;
+                    switchcount++;
+                }
+            }
+        }
+
+        function submitForm(id, rating, index) {
+            document.getElementById("hotelid").value = id;
+            document.getElementById("hotelRating").value = rating;
+            document.getElementById("selectedHotel").value = index;
+            document.getElementById("myForm").submit();
+        }
+
+        function initMap() {
+            var uluru = { lat:@Model.latitude , lng:@Model.longitude  };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 11,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+    </script>
+    <script async defer
+            src="https://maps.googleapis.com/maps/api/js?key=@Model.apiKey&callback=initMap">
+    </script>
+
+</body>
+</html>

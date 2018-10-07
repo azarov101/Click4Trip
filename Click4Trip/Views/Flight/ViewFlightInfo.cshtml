@@ -1,0 +1,267 @@
+﻿@model Click4Trip.ViewModel.FlightInfoVM
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/CSS/ViewFlight.css" />
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="/resources/demos/style.css">
+    <title>@ViewBag.Title</title>
+</head>
+
+@{
+    ViewBag.Title = "ViewFlightInfo";
+}
+
+<body>
+    <div class="row" id="div1">
+        <div class="myContainer1">
+            <div class="a">
+                <div class="myContainer11 gridDevide1" style="border-right: 1px dashed #333;">
+                    <div style="grid-column: 1; grid-row: 1; margin-top: 2px; margin-bottom: 12px; margin-left:20px;">
+                        <i class="fas fa-plane" style="font-size:36px; margin:auto; text-align: center;"></i>
+                    </div>
+                    <div style="grid-column: 2; grid-row: 1; padding-left: 15px; padding-right: 15px; padding-top: 5px; padding-bottom: 15px;">
+                        <label style="font: italic bold 16px/30px Georgia, serif;">@Model.originCity - @Model.destinationCity</label>
+                    </div>
+                </div>
+            </div>
+            <div class="b">
+                <div class="myContainer12">
+                    <div style="grid-column: 1; grid-row: 1; margin-left:20px; margin-right:20px;">
+                        <div>
+                            <span style="float: left; font: italic bold 14px/30px Georgia, serif;">@Model.departureDate</span>
+                            <span style="font: italic bold 14px/30px Georgia, serif;"> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;until </span>
+                            <span style="float: right; font: italic bold 14px/30px Georgia, serif;">@Model.returnDate</span>
+                        </div>
+                        <div>
+                            <span style="font: italic 12px/30px Georgia, serif; float: left;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; @Model.outbound.DepartureDay</span>
+                            <span style="font: italic 12px/30px Georgia, serif; float: right;">@Model.inbound.ArrivalDay &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                        </div>
+                    </div>
+                    <div style="grid-column: 1; grid-row: 1; margin-top: 10px; height: 40px; border-right: 1px dashed #333;"></div>
+                </div>
+            </div>
+            <div style="padding-left:40px; padding-right: 10px; padding-top: 15px; padding-bottom:15px;">
+                <label style="font: italic bold 16px/30px Georgia, serif;">Remaining seats: <span style="color:#f44336; font-size:20px;">&nbsp;@Model.seatsRemaining</span></label>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row" id="div2">
+        <div class="myContainer11 gridDevide2" style="height:120px;" @*style="border: 2px solid black;"*@>
+            <div style="grid-column: 1; grid-row: 1; padding-left:20px; padding-top:10px; line-height:1;">
+                <p style="font: bold 18px/30px Georgia, serif; margin:0;">Flight from <span style="font-style: italic; color:#4eacda;">@Model.originCity, @Model.originCountry</span> to <span style="font-style: italic; color:#4eacda;">@Model.destinationCity, @Model.destinationCountry</span></p>
+                <p style="font: 13px/30px Georgia, serif; margin:0; line-height:1.5;">
+                    Regular round-trip flight <br />
+                    Between @Model.outbound.DepartureDate to @Model.inbound.ArrivalDate<br />
+                    The price is for 1 Adult
+                </p>
+            </div>
+            <div style="grid-column: 2; grid-row: 1; font: italic bold 28px/30px Georgia, serif; margin-left:auto; margin-right:auto; padding-top:38px; padding-bottom:38px;">
+                @Model.price$
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row" id="div3" style="height:320px;">
+        <div class="c" style="width:98%; margin-left:auto; margin-right:auto;">
+            <p style="padding-left:20px; padding-right:20px; font: bold 14px/30px Georgia, serif; background-color:#ececec; color:#585858;">
+                <i class="fa fa-plane"></i>
+                @Model.originCity - @Model.destinationCity
+                <span style="float:right;">
+                    <i class="far fa-clock" style="font-weight:bold;"></i> @Model.timeDuration_outbound Hrs
+                </span>
+            </p>
+        </div>
+        <div class="myContainer11 gridDevide1">
+            <div style="grid-column: 1; grid-row: 1; font: 14px/30px Georgia, serif; margin:auto; text-align:center; line-height:1; padding-top:10px;">
+                <p><i class="fab fa-avianex"></i> @Model.airline Airline</p>
+                <p style="font-size: 11px; font-style:italic; text-align:center; color:#999999;"> Flight #@Model.outbound.FlightNumber </p>
+            </div>
+            <div style="grid-column: 2; grid-row: 1; font: 14px/30px Georgia, serif; padding-left: 40px; padding-right:40px;">
+                <span style="float:left; line-height:1.5; color:#999999; text-align:left; width:33.3%;">
+                    <span style="font-weight:bold; font-size: 18px; color:black;">@Model.outbound.DepartureAirportCode @Model.outbound.DepartureTime</span> <br />
+                    @Model.outbound.DepartureDay, @Model.outbound.DepartureDate <br />
+                    @Model.outbound.DepartureAirportName
+                </span>
+                <span style="padding-top:25px; float:left; margin:auto; text-align:center; width:33.3%;"><i class="fas fa-plane" style="font-size:18px; color:#999999;"></i></span>
+                <span style="float:right; line-height:1.5; color:#999999; text-align:right; width:33.3%;">
+                    <span style="font-weight:bold; font-size: 18px; color:black;">@Model.outbound.ArrivalAirportCode @Model.outbound.ArrivalTime</span> <br />
+                    @Model.outbound.ArrivalDay, @Model.outbound.ArrivalDate <br />
+                    @Model.outbound.ArrivalAirportName
+                </span>
+            </div>
+        </div>
+        <br /> <br /><hr>
+        <div class="c" style="width:98%; margin-left:auto; margin-right:auto; margin-top:-6px;">
+            <p style="padding-left:20px; padding-right:20px; font: bold 14px/30px Georgia, serif; background-color:#ececec; color:#585858;">
+                <i class="fa fa-plane"></i>
+                @Model.destinationCity - @Model.originCity
+                <span style="float:right;">
+                    <i class="far fa-clock" style="font-weight:bold;"></i> @Model.timeDuration_inbound Hrs
+                </span>
+            </p>
+        </div>
+        <div class="myContainer11 gridDevide1">
+            <div style="grid-column: 1; grid-row: 1; font: 14px/30px Georgia, serif; margin:auto; text-align:center; line-height:1; padding-top:10px;">
+                <p><i class="fab fa-avianex"></i> @Model.airline Airline</p>
+                <p style="font-size: 11px; font-style:italic; text-align:center; color:#999999;"> Flight #@Model.inbound.FlightNumber </p>
+            </div>
+            <div style="grid-column: 2; grid-row: 1; font: 14px/30px Georgia, serif; padding-left: 40px; padding-right:40px;">
+                <span style="float:left; line-height:1.5; color:#999999; text-align:left; width:33.3%;">
+                    <span style="font-weight:bold; font-size: 18px; color:black;">@Model.inbound.DepartureAirportCode @Model.inbound.DepartureTime</span> <br />
+                    @Model.inbound.DepartureDay, @Model.inbound.DepartureDate <br />
+                    @Model.inbound.DepartureAirportName
+                </span>
+                <span style="padding-top:25px; float:left; margin:auto; text-align:center; width:33.3%;"><i class="fas fa-plane" style="font-size:18px; color:#999999;"></i></span>
+                <span style="float:right; line-height:1.5; color:#999999; text-align:right; width:33.3%;">
+                    <span style="font-weight:bold; font-size: 18px; color:black;">@Model.inbound.ArrivalAirportCode @Model.inbound.ArrivalTime</span> <br />
+                    @Model.inbound.ArrivalDay, @Model.inbound.ArrivalDate <br />
+                    @Model.inbound.ArrivalAirportName
+                </span>
+            </div>
+        </div>
+    </div>
+
+    <br />
+
+    <div class="row" id="div4" style="height:100px;">
+        <div class="myContainer4" style="font: bold 12px/30px Georgia, serif; text-align:center;">
+            <span style="font-size:16px; padding-top:25px;">Composition:</span>
+            <span style="padding-right:20px; font-style:italic;">Babies [0-2]</span>
+            <span style="padding-right:20px; font-style:italic;">Children [3-11]</span>
+            <span style="padding-right:20px; font-style:italic;">Youngsters [12-24]</span>
+            <span style="padding-right:20px; font-style:italic;">Adults [25-64]</span>
+            <span style="padding-right:20px; font-style:italic;">Pensioners [65+]</span>
+        </div>
+        <div style="font: italic 18px/30px Georgia, serif; grid-gap: 15px;">
+            <span></span>
+            <span style="margin-left:182px;"><input id="quantity1" type="number" name="quantity" min="0" max="5" value="0"></span>
+            <span style="margin-left:97px;"><input id="quantity2" type="number" name="quantity" min="0" max="5" value="0"></span>
+            <span style="margin-left:97px;"><input id="quantity3" type="number" name="quantity" min="0" max="5" value="0"></span>
+            <span style="margin-left:97px;"><input id="quantity4" type="number" name="quantity" min="0" max="5" value="1"></span>
+            <span style="margin-left:97px;"><input id="quantity5" type="number" name="quantity" min="0" max="5" value="0"></span>
+        </div>
+    </div>
+
+    <div style="line-height:1;">
+        <br />
+        <center><label id="errorMessage" class="text-danger"></label></center>
+        <br />
+    </div>
+
+    <div class="myContainer5" id="div5">
+        <div style="grid-column: 1; grid-row: 1; margin-left: 75px;">
+            <button id="submitButton" class="blockButton" onclick="submit()"><span>Continue to Payment</span></button>
+        </div>
+        <div style="grid-column: 2; grid-row: 1;">
+            <div id="total" style="box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24); border-radius: 10px; border-style: solid; border-width: 1px; font: bold 22px/30px Georgia, serif; text-align:center; padding-top:10px; margin-right:75px; height:50px;"></div>
+        </div>
+    </div>
+
+    @using (Html.BeginForm("SubmitFlightComposition", "Flight", FormMethod.Post, new { id = "myForm" }))
+    {
+        @Html.HiddenFor(x => x.composition, new { id = "composition" })
+        @Html.HiddenFor(x => x.totalPrice, new { id = "totalPrice" })
+
+        @Html.HiddenFor(x => x.departureDate, new { value = Model.departureDate })
+        @Html.HiddenFor(x => x.returnDate, new { value = Model.returnDate })
+        @Html.HiddenFor(x => x.originCity, new { value = Model.originCity })
+        @Html.HiddenFor(x => x.destinationCity, new { value = Model.destinationCity })
+        @Html.HiddenFor(x => x.airline, new { value = Model.airline })
+        @Html.HiddenFor(x => x.price, new { value = Model.price })
+        @Html.HiddenFor(x => x.outbound.FlightNumber, new { value = Model.outbound.FlightNumber })
+        @Html.HiddenFor(x => x.inbound.FlightNumber, new { value = Model.inbound.FlightNumber })
+
+        @Html.HiddenFor(x => x.destinationCountry, new { value = Model.destinationCountry })
+    }
+
+    <script>
+        var maximumSeats = 9;
+        if (@Model.seatsRemaining < 9) {
+            maximumSeats = @Model.seatsRemaining;
+        }
+
+        var quantity1, quantity2, quantity3, quantity4, quantity5;
+        var total;
+        GetQuantity();
+        CalculateTotal();
+
+        $("#quantity1").on("keyup keydown change", function (event) {
+            document.getElementById("errorMessage").innerHTML = "";
+            GetQuantity();
+            CalculateTotal();
+        });
+        $("#quantity2").on("keyup keydown change", function (event) {
+            document.getElementById("errorMessage").innerHTML = "";
+            GetQuantity();
+            CalculateTotal();
+        });
+        $("#quantity3").on("keyup keydown change", function (event) {
+            document.getElementById("errorMessage").innerHTML = "";
+            GetQuantity();
+            CalculateTotal();
+        });
+        $("#quantity4").on("keyup keydown change", function (event) {
+            document.getElementById("errorMessage").innerHTML = "";
+            GetQuantity();
+            CalculateTotal();
+        });
+        $("#quantity5").on("keyup keydown change", function (event) {
+            document.getElementById("errorMessage").innerHTML = "";
+            GetQuantity();
+            CalculateTotal();
+        });
+
+        function GetQuantity() {
+            quantity1 = parseInt(document.getElementById("quantity1").value);
+            quantity2 = parseInt(document.getElementById("quantity2").value);
+            quantity3 = parseInt(document.getElementById("quantity3").value);
+            quantity4 = parseInt(document.getElementById("quantity4").value);
+            quantity5 = parseInt(document.getElementById("quantity5").value);
+        }
+
+        function CalculateTotal() {
+            var price = @Model.price;
+            var baby = 0.4;
+            var child = 0.6;
+            var young = 1.2;
+            var adult = 1;
+            var pensioner = 0.8;
+
+            total = ((quantity1 * baby * price) + (quantity2 * child * price) + (quantity3 * young * price) + (quantity4 * adult * price) + (quantity5 * pensioner * price)).toFixed(2);
+            document.getElementById("total").innerHTML = total + "$";
+        }
+
+        function submit() {
+            if (quantity1 + quantity2 + quantity3 + quantity4 + quantity5 > maximumSeats)
+            {
+                document.getElementById("errorMessage").innerHTML = "Maximum amount of available seats is " + maximumSeats;
+                return;
+            }
+            if (quantity1 + quantity2 + quantity3 + quantity4 + quantity5 == 0) {
+                document.getElementById("errorMessage").innerHTML = "You need to choose at least one seat";
+                return;
+            }
+            debugger
+            document.getElementById("composition").value = quantity1 + ", " + quantity2 + ", " + quantity3 + ", " + quantity4 + ", " + quantity5;
+            document.getElementById("totalPrice").value = document.getElementById("total").innerHTML;
+            $('form#myForm').submit();
+        }
+    </script>
+</body>
+</html>

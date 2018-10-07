@@ -1,0 +1,57 @@
+﻿@model Click4Trip.ViewModel.HotelSearchResultsVM
+<!doctype html>
+
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+        #header {
+            position: relative;
+        }
+
+        /* positions header-content at the bottom of header's context */
+        #header-content {
+            position: absolute;
+            bottom: 25px;
+            left: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header" class="jumbotron" style="height:200px;">
+        <div class="row" style="margin-top:-30px;margin-left:-20px;">
+           <div class="col-md-4">
+                <a><img src='@Model.hotelImage' height="150" width="110" style="margin-left:-50px;cursor:pointer" onclick="submitForm('@Model.hotelLink')"/></a>
+            </div>
+            <div class="col-md-8" style="height:200px;">
+                <a><h5 style="display:inline;margin-right:10px;cursor:pointer" onclick="submitForm('@Model.hotelLink')">@Model.hotelName</h5></a>
+                <div style="margin-right:10px">
+                    @for (int i = 0; i < 5; i++)
+                    {
+                        if (i < Model.rating)
+                        {
+                            <span class="fa fa-star checked"></span>
+                        }
+                        else
+                        {
+                            <span class="fa fa-star"></span> 
+                        }
+                    }
+                </div>
+                @if (@Model.hotelDescription!=null && @Model.hotelDescription.Length > 40)
+                {
+                    <h6>@Model.hotelDescription.Substring(0, 40)... <small style="font-size:smaller;display:inline;color:dimgrey"title="@Model.hotelDescription"> Read More</small></h6>
+                }
+                else if (@Model.hotelDescription != null)
+                {
+                    <h6>@Model.hotelDescription</h6>
+                }
+                <br />
+                <h6 id="header-content" style="border: 1px solid #000000;background-color:green;width:150px;">From: @Model.hotelPrice ₪ <small style="font-size:smaller;display:inline;color:dimgrey"> (per night)</small></h6>           
+            </div>
+        </div>
+    </div>
+</body>

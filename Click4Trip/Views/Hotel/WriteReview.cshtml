@@ -1,0 +1,68 @@
+﻿@model Click4Trip.ViewModel.IdentifyVM
+
+@{
+    ViewBag.Title = "Write Review";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    @*<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>*@
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Authorize</title>
+    <link rel="stylesheet" href="~/CSS/writereview.css">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+
+</head>
+
+<body>
+    <div class="writereview">
+        <div class="writereview-screen">
+            <center>
+                <h2>Authorize yourself</h2>
+            </center>
+            @using (Html.BeginForm("SubmitIdentify", "Hotel", FormMethod.Post, new { id = "myForm" }))
+            {
+                <center>
+                    <div class="form-group">
+                        <label>4 last digits of credit card </label>
+                        @Html.TextBoxFor(x => x.credit, new { type = "text", @class = "form-control", id="id",@*placeholder = "Id",*@ required = "required", maxlength = "9" })
+                        <div> @Html.ValidationMessageFor(x => x.credit, null, new { @class = "text-danger" })</div>
+                    </div>
+                    
+                    <div>
+                        <label>Enter Invoice Number </label>
+                        @Html.TextBoxFor(x => x.InvoiceId, new { type = "text", @class = "form-control", id="invnum",@*placeholder = "Invoice number",*@ required = "required", maxlength = "20" })
+                        <div> @Html.ValidationMessageFor(x => x.InvoiceId, null, new { @class = "text-danger" })</div>
+                    </div>
+                    <br />
+                    <p>
+                        <center>
+                            <label class="text-danger">@ViewData["msg"]</label>
+                            <label class="text-success">@ViewData["msgsc"]</label>
+                        </center>
+                    </p>
+                    <button type="submit" onclick="deletemsg()" class="nextbtn">Next &raquo;</button>
+                </center>
+            }
+        </div>
+        
+    </div>
+    <script>
+        if ("@ViewData["msgsc"]" == "Review sent successfully!") {
+            var varTimerInMiliseconds = 3000;
+            setTimeout(function () {
+                window.location.href = '@Url.Action("NewIndex", "Home")';
+            }, varTimerInMiliseconds);
+        }
+
+        function deletemsg() {
+            document.getElementById("msg").innerHTML = "";
+            document.getElementById("msgsc").innerHTML = "";
+        }
+    </script>
+</body>
+</html>

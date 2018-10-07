@@ -1,0 +1,145 @@
+﻿@model Click4Trip.Models.SupportTicket
+
+@{
+    ViewBag.Title = "Support Ticket";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="~/Scripts/jquery-1.10.2.intellisense.js" type="text/javascript"></script>
+    <script src="~/Scripts/jquery.validate.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/CSS/NewIndex/demo.css" />
+
+    <title>Hotel Review</title>
+    <style>
+        body {
+            /*background-color: #0072C6;*/
+            padding: 50px;
+        }
+
+        .main {
+            margin: 20px auto;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            width: 70%;
+        }
+
+        .screen {
+            background-color: #FFF;
+            overflow: hidden;
+            padding: 20px;
+            box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+        }
+
+        div.stars {
+            width: 300px;
+            display: inline-block;
+            margin-left: -40px;
+        }
+
+        input.star {
+            display: none;
+        }
+
+        label.star {
+            float: right;
+            padding: 10px;
+            font-size: 36px;
+            color: #444;
+            transition: all .2s;
+        }
+
+        input.star:checked ~ label.star:before {
+            content: '\f005';
+            color: #FD4;
+            transition: all .25s;
+        }
+
+        /*input.star-5:checked ~ label.star:before {
+            color: #FE7;
+            text-shadow: 0 0 20px #952;
+        }
+
+        input.star-1:checked ~ label.star:before {
+            color: #F62;
+        }*/
+
+        label.star:hover {
+            transform: rotate(-15deg) scale(1.07);
+        }
+
+        label.star:before {
+            content: '\f006';
+            font-family: FontAwesome;
+        }
+
+        #rev {
+            background: #f2f2f2;
+        }
+
+        .submitbtn {
+            text-transform: uppercase;
+            outline: 0;
+            background: #f44336;
+            width: 30%;
+            border: 0;
+            padding: 10px;
+            color: #FFFFFF;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+            .submitbtn:active {
+                background-color: #f23020;
+                /*transform: translateY(1px);*/
+            }
+
+        .custom-validation-summary ul {
+            list-style-type: square;
+            color: black;
+            padding: 0;
+            font-size: 1.17em;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="screen">
+            <center>
+                <h3>Support Ticket</h3>
+                <br />
+                @using (Html.BeginForm("SubmitTicket", "Support", FormMethod.Post, new { id = "myForm" }))
+                {
+                    <h4 style="text-decoration:underline;">Your Issue</h4>
+                    @Html.TextAreaFor(x => x.Note, 10, 100, new { type = "text", @class = "form-control", id = "rev", required = "required", maxlength = "690" })
+                    <div> @Html.ValidationMessageFor(x => x.Note, null, new { @class = "text-danger" })</div>
+                    <br />
+                    <h4 style="text-decoration:underline;">Your full name</h4>
+                    @Html.TextBoxFor(x => x.FullName, new { type = "text", @class = "form-control", id = "cusname", required = "required", maxlength = "50", placeholder = "Chuck Norris" })
+                    <div> @Html.ValidationMessageFor(x => x.FullName, null, new { @class = "text-danger" })</div>
+                    <br />
+                    <h4 style="text-decoration:underline;">Your Phone</h4>
+                    @Html.TextBoxFor(x => x.PhoneNumber, new { type = "text", @class = "form-control", id = "cusname", required = "required", maxlength = "50", placeholder = "0524522397" })
+                    <small>(an aget will call you in 24 hours)</small>
+                    <div> @Html.ValidationMessageFor(x => x.PhoneNumber, null, new { @class = "text-danger" })</div>
+                    <br />
+                    <div><label class="text-success" id="msg" style="font-size:14px;">@ViewData["msg"]</label></div>
+                    <button type="submit" class="submitbtn">Submit &raquo;</button>
+                }
+            </center>
+        </div>
+    </div>
+    <script>
+        if ("@ViewData["msg"]" == "Ticket sent!") {
+            var varTimerInMiliseconds = 3000;
+            setTimeout(function () {
+                window.location.href = '@Url.Action("NewIndex", "Home")';
+            }, varTimerInMiliseconds);
+        }
+    </script>
+</body>
+</html>
