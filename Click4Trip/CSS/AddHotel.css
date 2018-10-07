@@ -1,0 +1,208 @@
+﻿/*----------------------------------------------------------- image-modal -----------------------------------------------------------*/
+body {
+    font-family: Verdana, sans-serif;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.image-modal-row > .image-modal-column {
+    padding: 2px 8px;
+}
+
+.image-modal-row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.image-modal-column {
+    float: left;
+    width: 33%;
+}
+
+/* The image-modal (background) */
+.image-modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: black;
+}
+
+/* image-modal Content */
+.image-modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 1200px;
+}
+
+/* The Close Button */
+.image-modal-close {
+    color: white;
+    position: absolute;
+    top: 30px;
+    right: 25px;
+    font-size: 50px;
+    font-weight: bold;
+}
+
+    .image-modal-close:hover,
+    .image-modal-close:focus {
+        color: #999;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.mySlides {
+    display: none;
+}
+
+.image-modal-cursor {
+    cursor: pointer
+}
+
+image-modal-img {
+    margin-bottom: -4px;
+}
+
+.image-modal-caption-container {
+    text-align: center;
+    background-color: black;
+    padding: 2px 16px;
+    color: white;
+}
+
+image-modal-img.image-modal-hover-shadow {
+    transition: 0.3s
+}
+
+.image-modal-hover-shadow:hover {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)
+}
+
+/*----------------------------------------------------------- link-modal -----------------------------------------------------------*/
+
+/* The link-modal (background) */
+.link-modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* link-modal Content */
+.link-modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 80%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+/* The Close Button */
+.close-link-modal {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .close-link-modal:hover,
+    .close-link-modal:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+.link-modal-header {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+.link-modal-body {
+    padding: 2px 16px;
+}
+
+.link-modal-footer {
+    padding: 2px 16px;
+    background-color: #5cb85c;
+    color: white;
+}
+
+/*----------------------------------------------------------- Step Form -----------------------------------------------------------*/
+
+/* Hide all steps by default: */
+.tab {
+    display: none;
+}
+
+/* Make circles that indicate the steps of the form: */
+.step {
+    height: 15px;
+    width: 15px;
+    margin: 0 2px;
+    background-color: #bbbbbb;
+    border: none;
+    border-radius: 50%;
+    display: inline-block;
+    opacity: 0.5;
+}
+
+.step.active {
+    opacity: 1;
+}
+
+ /* Mark the steps that are finished and valid: */
+ .step.finish {
+     background-color: #4CAF50;
+ }

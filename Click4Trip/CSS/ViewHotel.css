@@ -1,0 +1,513 @@
+﻿body {
+    font-family: Arial;
+    margin: 0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+img {
+    vertical-align: middle;
+}
+
+/* Position the image container (needed to position the left and right arrows) */
+.myContainer {
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 33% 33% 33%;
+    position: relative;
+}
+
+.myReview0 {
+    display: grid;
+    position: relative;
+    height: 100px;
+}
+
+.myReview1 {
+    /*display: grid;*/
+    grid-gap: 2px;
+    grid-template-columns: 25% 75%;
+    position: relative;
+    margin-top: auto;
+    margin-bottom: 15px;
+    display: none;
+    height: 500px;
+}
+.myReview2 {
+    display: grid;
+    grid-gap: 4px;
+    grid-template-columns: 20% 80%;
+    position: relative;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+
+.a {
+    grid-column: 1;
+    grid-row: 1;
+    border: 2px solid black;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.b {
+    grid-column: 2/4;
+    grid-row: 1 / 3;
+    border: 2px solid black;
+    margin-top: 10px;
+    margin-right: 9px;
+    margin-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+
+.c {
+    grid-column: 1;
+    grid-row: 2;
+    border: 2px solid black;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
+.d {
+    grid-column: 2/4;
+    grid-row: 1/3;
+    /*border: 2px solid black;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 9px;
+    margin-bottom: 10px;*/
+}
+
+.d2 {
+    grid-column: 2/4;
+    grid-row: 1/3;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.e {
+    grid-column: 1;
+    grid-row: 1/3;
+    /*border: 2px solid black;
+    margin-top: 10px;
+    margin-left: 5px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    padding-left: 25px;
+    padding-right: 25px;*/
+}
+
+.e2 {
+    grid-column: 1;
+    grid-row: 1/3;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-right: 1px dashed #333;
+}
+
+.f {
+    grid-column: 1;
+    grid-row: 1/3;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 25px;
+}
+
+.g {
+    grid-column: 2/4;
+    grid-row: 1/3;
+    padding-left: 10px;
+    padding-right: 25px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+/* Hide the images by default */
+.mySlides {
+    display: none;
+}
+
+/* Add a pointer when hovering over the thumbnail images */
+.cursor {
+    cursor: pointer;
+}
+
+/* Next & previous buttons */
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 40%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: white;
+    font-weight: bold;
+    font-size: 20px;
+    border-radius: 0 3px 3px 0;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+/* Position the "next button" to the right */
+.next {
+    right: 0;
+    border-radius: 3px 0 0 3px;
+}
+    /* On hover, add a black background color with a little bit see-through */
+    .prev:hover,
+    .next:hover {
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+
+/* Container for image text */
+.caption-myContainer {
+    text-align: center;
+    background-color: #222;
+    padding: 2px 16px;
+    color: white;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.myColumn {
+    /*float: left; */
+    width: 16.66%;
+}
+
+/* Add a transparency effect for thumnbail images */
+.demo {
+    opacity: 0.6;
+}
+
+    .active,
+    .demo:hover {
+        opacity: 1;
+    }
+
+#carousel {
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+    width: 100%;
+    margin-left: 15px;
+}
+
+#carouselVertical {
+    overflow-y: scroll;
+    overflow-x: hidden;
+    white-space: nowrap;
+    /*width: 100%;*/
+    height: 250px;
+}
+
+#carousel .myColumn {
+    display: inline-block;
+}
+
+#map {
+    height: 300px;
+    width: 100%;
+}
+
+.checked {
+    color: orange;
+}
+
+.myButton {
+    float:right;
+    right: 0;
+    position:relative;
+    bottom: -50px;
+    background-color: #f44336;
+    border: thin;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-bottom: -11px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: 'Raleway', Arial, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 5%;
+    transition: 0.6s ease;
+}
+
+    .myButton:active {
+        background-color: #f23020;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.24);
+        transition: 0.3s ease;
+    }
+
+/* Remove margins and padding from the list */
+#myUL {
+    margin: 0;
+    padding: 0;
+}
+
+    /* Style the list items */
+    #myUL li {
+        cursor: pointer;
+        position: relative;
+        padding: 12px 8px 12px 40px;
+        list-style-type: none;
+        background: #eee;
+        font-size: 14px;
+        transition: 0.2s;
+        /* make the list items unselectable */
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+
+    /* Set all odd list items to a different color (zebra-stripes) */
+        #myUL li:nth-child(odd) {
+            background: #f9f9f9;
+        }
+
+    /* Darker background-color on hover */
+        #myUL li:hover {
+            background: #ddd;
+        }
+
+/* Style the close button */
+.close {
+    position: absolute;
+    right: 0;
+    top: 0;
+    padding: 12px 16px 12px 16px;
+}
+
+.close:hover {
+    background-color: #f44336;
+    color: white;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none; /* Hidden by default */
+    position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    padding-top: 100px; /* Location of the box */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 33.3%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+/* Add Animation */
+@-webkit-keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+@keyframes animatetop {
+    from {
+        top: -300px;
+        opacity: 0
+    }
+
+    to {
+        top: 0;
+        opacity: 1
+    }
+}
+
+/* The Close Button */
+.closeModal {
+    margin-left: -25px;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+    .closeModal:hover,
+    .closeModal:focus {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+
+
+
+.RoomComposition {
+    margin: auto;
+    padding: 8px;
+}
+
+.composition {
+    list-style-type: none;
+    border: 1px solid #eee;
+    margin: 0;
+    padding: 0;
+    -webkit-transition: 0.3s;
+    transition: 0.3s;
+}
+
+    .composition .header {
+        background-color: #111;
+        color: white;
+        font-size: 25px;
+    }
+
+    .composition li {
+        border-bottom: 1px solid #eee;
+        padding: 15px;
+        text-align: center;
+    }
+
+
+    .composition .grey {
+        background-color: #eee;
+        font-size: 20px;
+    }
+
+.ModalButton {
+    background-color: #00c86e;
+    border: none;
+    color: white;
+    padding: 10px 25px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+@media only screen and (max-width: 600px) {
+    .RoomComposition {
+        width: 100%;
+    }
+}
+
+.blockButton {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 4px;
+    background-color: #6cbae0;
+    color: white;
+    padding: 14px 28px;
+    font-size: 28px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+    .blockButton span {
+        cursor: pointer;
+        display: inline-block;
+        position: relative;
+        transition: 0.5s;
+    }
+
+        .blockButton span:after {
+            content: '\00bb';
+            position: absolute;
+            opacity: 0;
+            top: 0;
+            right: -50px;
+            transition: 1.2s;
+        }
+
+    .blockButton:hover span {
+        padding-right: 25px;
+    }
+
+        .blockButton:hover span:after {
+            opacity: 1;
+            right: 0;
+        }
+
+/*-------------------------------------------------------------*/
+
+/* Next & previous buttons */
+#nextButton, #prevButton {
+    cursor: pointer;
+    position: absolute;
+    top: 60%;
+    width: auto;
+    padding: 16px;
+    margin-top: -10px;
+    color: black;
+    font-weight: bold;
+    font-size: 8px;
+    transition: 0.6s ease;
+    text-decoration: none;
+    display: inline-block;
+    padding: 8px 10px;
+}
+
+    #nextButton:hover, #prevButton:hover {
+        background-color: darkgrey;
+        color: white;
+    }
+/* Position the "next button" to the right */
+#nextButton {
+    right: 0;
+}
+
+.round {
+    border-radius: 40%;
+}
+
+/* Number text (1/3 etc) */
+.numbertext {
+    font: bold 12px/30px Georgia, serif;
+    color: black;
+    font-size: 12px;
+    padding: 8px 12px;
+    position: absolute;
+    top: 0;
+}

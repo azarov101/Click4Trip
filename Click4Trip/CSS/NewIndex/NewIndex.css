@@ -1,0 +1,167 @@
+﻿#myContainer {
+    /*background-image: url("https://i.imgur.com/bOjvkT5.jpg");*/
+    width: 100%;
+    left: 0;
+    position: absolute;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    /*background-color:black;
+    opacity: 0.5;*/
+}
+
+.checked {
+    color: #ffc600;
+}
+
+.myButton {
+    /*font-weight: bold;*/
+    position: absolute;
+    right: 3%;
+    bottom: 5%;
+    background-color: #6cbae0;
+    border: thin;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 80px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: 'Raleway', Arial, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 10%;
+    transition: 0.6s ease;
+}
+
+    .myButton:active {
+        background-color: #4eacda;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.24);
+        transition: 0.3s ease;
+        /*transform: translateY(1px);*/
+    }
+
+#hotelBox1, #hotelBox2, #hotelBox3, #hotelBox4, #hotelBox5, #hotelBox6 {
+    /*border-radius: 1%;*/
+    height: 365px;
+    background-color: white;
+    grid-row: 1;
+    position: relative;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+    overflow: auto;
+}
+
+    #hotelBox1:hover, #hotelBox2:hover, #hotelBox3:hover, #hotelBox4:hover, #hotelBox5:hover, #hotelBox6:hover {
+        box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12), 0 3px 12px rgba(0, 0, 0, 0.24);
+        transition: 0.2s ease;
+    }
+
+#locationBox1, #locationBox2, #locationBox3, #locationBox4 {
+    border-radius: 1%;
+    height: 330px;
+    background-color: white;
+    grid-row: 1;
+    position: relative;
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    margin-top: 15px;
+    margin-bottom: 15px;
+    margin-left: 20px;
+    margin-right: 20px;
+    overflow: auto;
+}
+
+    #locationBox1:hover, #locationBox2:hover, #locationBox3:hover, #locationBox4:hover {
+        box-shadow: 0 3px 18px rgba(0, 0, 0, 0.12), 0 3px 12px rgba(0, 0, 0, 0.24);
+        transition: 0.2s ease;
+    }
+
+.loader {
+    border: 5px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 5px solid #3498db; /* #646464 */
+    width: 40px;
+    height: 40px;
+    -webkit-animation: spin 1s linear infinite;
+    animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+    0% {
+        -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.startDate, .endDate {
+    border-radius: 5px;
+    height: 33px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: #CCCCCC;
+    text-align: center;
+}
+
+
+div.ui-datepicker {
+    font-size: 16px;
+    /*left: 50% !important;*/
+    margin-left: -5em !important;
+}
+
+.mySearchButton {
+    /*font-weight: bold;*/
+    /*position: absolute;*/
+    right: 3%;
+    bottom: 0;
+    background-color: #f44336;
+    border: thin;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-bottom: -11px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 120px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: 'Raleway', Arial, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 10%;
+    transition: 0.6s ease;
+}
+
+    .mySearchButton:active {
+        background-color: #f23020;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.24);
+        transition: 0.3s ease;
+        /*transform: translateY(1px);*/
+    }

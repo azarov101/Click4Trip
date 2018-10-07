@@ -1,0 +1,150 @@
+﻿body {
+}
+
+#div1, #div2, #div3, #div4 {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    width: 75%;
+    margin: auto;
+    border-radius: 25px;
+    border-style: solid;
+    border-width: 1px;
+}
+
+#div5 {
+    width: 75%;
+    margin: auto;
+    border-radius: 10px;
+    /*border-style: solid;
+    border-width: 1px;*/
+}
+
+.myContainer1 {
+    height: 60px;
+    display: grid;
+    grid-gap: 8px;
+    grid-template-columns: 33% 33% 33%;
+    position: relative;
+}
+
+.myContainer11 {
+    margin-top:10px;
+    height: 40px;
+    display: grid;
+    grid-gap: 4px;
+    position: relative;
+}
+
+.gridDevide1 {
+    grid-template-columns: 20% 80%;
+}
+
+.gridDevide2 {
+    grid-template-columns: 80% 20%;
+}
+
+.myContainer12 {
+    /*margin-top: 10px;*/
+    /*height: 40px;*/
+    position: relative;
+    display: grid;
+    grid-gap: 1px;
+    grid-template-columns: 98% 2%;
+}
+
+.a {
+    grid-column: 1;
+    grid-row: 1;
+    /*border: 2px solid black;*/
+}
+
+.b {
+    grid-column: 2;
+    grid-row: 1;
+    /*border: 2px solid black;*/
+    /*margin-top: 10px;
+    margin-bottom: 10px;*/
+}
+
+.c {
+    grid-column: 1/2;
+    grid-row: 1;
+    /*border: 2px solid black;*/
+    margin-top:15px;
+}
+
+.myContainer4 {
+    margin-top: 10px;
+    height: 40px;
+    display: grid;
+    grid-gap: 4px;
+    position: relative;
+    grid-template-columns: 16.6% 16.6% 16.6% 16.6% 16.6% 16.6%;
+}
+
+.myContainer5 {
+    height: 50px;
+    display: grid;
+    grid-gap: 8px;
+    position: relative;
+    grid-template-columns: 60% 40%;
+}
+
+input[type=number] {
+    width: 45px;
+}
+
+.blockButton {
+    /*display: block;*/
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    width: 80%;
+    border: none;
+    border-radius: 10px;
+    background-color: #4eacda;
+    color: white;
+    padding: 10px 28px;
+    font: 22px/30px Georgia, serif;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+.blockButton2 {
+    /*display: block;*/
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    width: 100%;
+    border: none;
+    border-radius: 10px;
+    background-color: #4eacda;
+    color: white;
+    padding: 10px 28px;
+    /*font: 22px/30px Georgia, serif;*/
+    font-size: 22px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.5s;
+}
+
+.blockButton span, .blockButton2 span {
+    cursor: pointer;
+    display: inline-block;
+    position: relative;
+    transition: 0.5s;
+}
+
+    .blockButton span:after, .blockButton2 span:after {
+        content: '\00bb';
+        position: absolute;
+        opacity: 0;
+        top: 0;
+        right: -50px;
+        transition: 1.2s;
+    }
+
+.blockButton:hover span, .blockButton2:hover span {
+    padding-right: 25px;
+}
+
+    .blockButton:hover span:after, .blockButton2:hover span:after {
+        opacity: 1;
+        right: 0;
+    }

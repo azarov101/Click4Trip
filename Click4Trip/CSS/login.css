@@ -1,0 +1,44 @@
+body {
+    background-color: #0072C6;
+    padding: 50px;
+}
+.login {
+margin: 20px auto;
+margin-bottom:130px;
+margin-top:130px;
+width: 300px;
+}
+.login-screen {
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+
+.login-form {
+text-align: center;
+}
+.control-group {
+margin-bottom: 15px;
+}
+
+#email {
+    /*text-align: center;*/
+    background: #f2f2f2;
+}
+#Pass {
+    /*text-align: center;*/
+    background: #f2f2f2;
+}
+
+.loginbtn {
+    text-transform: uppercase;
+    outline: 0;
+    background: #0072C6;
+    width: 100%;
+    border: 0;
+    padding: 10px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+

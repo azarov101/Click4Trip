@@ -1,0 +1,38 @@
+﻿body {
+    background-color: #0072C6;
+    padding: 50px;
+}
+
+.deleteuser {
+    margin: 20px auto;
+    width: 900px;
+    margin-top: 80px;
+    margin-bottom:80px;
+}
+.deleteuser-screen {
+    background-color: #FFF;
+    padding: 20px;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+}
+.form-group {
+    margin: auto;
+    width: 60%;
+    padding: 10px;
+}
+.form-control {
+    width: 200px;
+}
+.deletebtn {
+    text-transform: uppercase;
+    outline: 0;
+    background: #0072C6;
+    border: 0;
+    width: 200px;
+    padding: 10px;
+    color: #FFFFFF;
+    font-size: 14px;
+    cursor: pointer;
+}
+#emails {
+    background: #f2f2f2;
+}

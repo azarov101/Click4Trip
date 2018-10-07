@@ -1,0 +1,250 @@
+﻿.vertical-divider {
+    clear: both;
+    position: relative;
+}
+
+    .vertical-divider:after {
+        clear: both;
+        content: " ";
+        display: block;
+        height: 0;
+        visibility: hidden;
+    }
+
+    .vertical-divider .column:not(:first-child):after, .vertical-divider .columns:not(:first-child):after {
+        background: #DDDDDD;
+        bottom: 0;
+        content: " ";
+        margin-left: -10px;
+        position: absolute;
+        top: 0;
+        width: 1px;
+    }
+
+ul {
+    list-style-type: square;
+}
+
+.button {
+    position: relative;
+    background-color: #00ca56;
+    border: none;
+    color: #FFFFFF;
+    width: 80px;
+    height: 30px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+    .button:after {
+        content: "";
+        background: #90EE90;
+        display: block;
+        position: absolute;
+        padding-top: 300%;
+        padding-left: 350%;
+        margin-left: -20px !important;
+        margin-top: -120%;
+        opacity: 0;
+        transition: all 0.8s
+    }
+
+    .button:active:after {
+        padding: 0;
+        margin: 0;
+        opacity: 1;
+        transition: 0s
+    }
+
+table {
+    /* to eliminate the default spacing between TDs*/
+    border-collapse: collapse;
+}
+
+
+#slidecontainer {
+    width: 100%;
+}
+
+.slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 25px;
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+}
+
+    .slider:hover {
+        opacity: 1;
+    }
+
+    .slider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 25px;
+        height: 25px;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+    .slider::-moz-range-thumb {
+        width: 25px;
+        height: 25px;
+        background: #4CAF50;
+        cursor: pointer;
+    }
+
+.checked {
+    color: #ffc600;
+}
+
+.unchecked {
+    color: #74777b;
+}
+
+.myButton {
+    /*font-weight: bold;*/
+    position: absolute;
+    right: 3%;
+    bottom: 15%;
+    background-color: #6cbae0;
+    border: thin;
+    font-size: 16px;
+    color: #FFFFFF;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 80px;
+    text-align: center;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+    font-family: 'Raleway', Arial, sans-serif;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.24);
+    border-radius: 10%;
+    transition: 0.6s ease;
+}
+
+    .myButton:active {
+        background-color: #4eacda;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.24);
+        transition: 0.3s ease;
+        /*transform: translateY(1px);*/
+    }
+
+.hotelBox, .flightBox, .packageBox, .carBox {
+    box-shadow: 0 1px 6px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.24);
+    display: grid;
+    position: relative;
+    background-color: white;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow: auto;
+}
+
+.hotelBox, .packageBox, .carBox {
+    grid-template-columns: 30% 70%;
+}
+
+/*.flightBox {
+    grid-template-columns: 30% 70%;
+}*/
+
+    .hotelBox:hover, .flightBox:hover, .packageBox:hover, .carBox:hover {
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.24);
+        transition: 0.2s ease;
+    }
+
+#myContainer {
+    /*background-image: url("https://i.imgur.com/XFjEa1h.jpg");*/
+    /*background-image: url("https://i.imgur.com/eKzGrGp.png");*/
+    height: 200px;
+    width: 100%;
+    left: 0;
+    position: absolute;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+/* -------------------------------------- Car Rental Part -------------------------------------- */
+.containerr {
+    /*display: block;*/
+    position: relative;
+    float:left;
+    left:5%;
+    padding-left: 35px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    font-size: 20px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+    /* Hide the browser's default checkbox */
+    .containerr input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+    }
+
+/* Create a custom checkbox */
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 25px;
+    width: 25px;
+    background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.containerr:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.containerr input:checked ~ .checkmark {
+    background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+/* Show the checkmark when checked */
+.containerr input:checked ~ .checkmark:after {
+    display: block;
+}
+
+/* Style the checkmark/indicator */
+.containerr .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 3px 3px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
