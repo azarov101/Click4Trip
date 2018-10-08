@@ -1,2 +1,2 @@
-# Click4Trip2
+# Click4Trip
 Travel Agency Site
